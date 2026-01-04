@@ -1,0 +1,134 @@
+.sliderContainer {
+  padding: 80px 20px;
+  background-color: #f8fafc; /* Light background for the section */
+}
+
+/* New Title Styling */
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.mainTitle {
+  font-size: 2.2rem;
+  color: #1e0735;
+  font-weight: 800;
+  margin-bottom: 10px;
+  letter-spacing: -0.5px;
+}
+
+.subTitle {
+  font-size: 1rem;
+  color: #64748b;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Card Styling */
+.card {
+  background: linear-gradient(145deg, #1e0735 0%, #0a0a0a 100%);
+  border-radius: 16px;
+  padding: 25px;
+  border: 1px solid #3a1a5e;
+  height: 285px; /* Compact height as requested */
+  display: flex;
+  flex-direction: column;
+  color: #ffffff;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.profileImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid #7c3aed;
+  object-fit: cover;
+}
+
+.info h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.verified {
+  font-size: 0.7rem;
+  color: #a78bfa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.feedback {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #d1d5db;
+  font-style: italic;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* Text ko 2 lines tak limit kiya */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.transactionBox {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 10px 15px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.amountDetail, .dateDetail {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-size: 0.6rem;
+  color: #94a3b8;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.amountText {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dateText {
+  color: #e2e8f0;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+.statusFooter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #22c55e;
+  font-weight: 600;
+  margin-top: auto;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  background-color: #22c55e;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #22c55e;
+}
+
+/* Pagination Dot Colors */
+:global(.swiper-pagination-bullet-active) {
+  background: #7c3aed !important;
+}
