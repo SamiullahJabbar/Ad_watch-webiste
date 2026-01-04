@@ -141,10 +141,10 @@ function LoginPage() {
                     <div className="right-panel">
                         <img src={sidebarImage} alt="Investment" className="sidebar-img" />
                         <div className="right-content">
-                            <div className="company-name">Investment Accounting</div>
-                            <h2 className="right-title">Continue Your Journey</h2>
+                            {/* <div className="company-name">Investment Accounting</div> */}
+                            {/* <h2 className="right-title">Continue Your Journey</h2> */}
                             <p className="right-subtitle">
-                                Access your investment portfolio and continue growing your wealth.
+                                {/* Access your investment portfolio and continue growing your wealth. */}
                             </p>
                         </div>
                     </div>
