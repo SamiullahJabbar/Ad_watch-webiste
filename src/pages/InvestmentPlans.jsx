@@ -205,7 +205,7 @@ const InvestmentPlans = () => {
                 </div>
             </div>
 
-            <h2 className="section-title">Investment Plans</h2>
+            <h2 className="section-title">Plans</h2>
             <div className="plans-grid">
                 {allPlans.map((plan) => (
                     <PlanCard 

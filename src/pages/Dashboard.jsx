@@ -126,7 +126,7 @@ function Dashboard() {
                             <DesktopQuickActionButton icon={FaUsers} label="Plan Profit" color="#388E3C" path="/profit" />
                         </div>
 
-                        <h2 className="section-title">Investment Plans</h2>
+                        <h2 className="section-title">Plan Activation</h2>
 
                         <InvestmentPlans 
                             plans={plans} 
