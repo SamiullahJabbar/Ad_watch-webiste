@@ -1,0 +1,235 @@
+/* Layout.css - Updated Full File */
+
+:root {
+  --green-primary: #0a520d;
+  --green-light: #388e3c;
+  --bg-light: #f0f4f8;
+  --form-card-bg: #ffffff;
+  --input-bg: #f8fafc;
+  --text-dark: #1e293b;
+  --text-gray: #64748b;
+  --border-color: #e2e8f0;
+  --green-gradient: linear-gradient(135deg, #0a520d 0%, #388e3c 100%);
+  --desktop-sidebar-width: 260px;
+  --desktop-header-height: 72px;
+  --mobile-header-height: 64px;
+}
+
+.layout-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg-light);
+  font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Header Styles */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--form-card-bg);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 1000;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.header-scrolled {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.user-badge {
+  display: flex;
+  flex-direction: column;
+}
+
+.welcome-text {
+  font-size: 12px;
+  color: var(--text-gray);
+  margin: 0;
+  font-weight: 500;
+}
+
+.header-text {
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-button {
+  cursor: pointer;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  width: 40px;
+  height: 40px;
+  color: var(--text-dark);
+}
+
+.whatsapp-icon { 
+  color: #25d366; 
+  background-color: rgba(37, 211, 102, 0.1); 
+}
+
+/* Sidebar Styling */
+.desktop-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: var(--desktop-sidebar-width);
+  background-color: var(--form-card-bg);
+  border-right: 1px solid var(--border-color);
+  padding: 24px 0;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1100;
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-weight: 800;
+  background: var(--green-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  padding: 0 20px;
+  margin-bottom: 30px;
+}
+
+.sidebar-item {
+  padding: 12px 20px;
+  font-size: 15px;
+  color: var(--text-dark);
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 4px solid transparent;
+  transition: all 0.2s ease;
+  margin: 2px 0;
+}
+
+.sidebar-item:hover {
+  background-color: var(--input-bg);
+  color: var(--green-primary);
+}
+
+.sidebar-item.active {
+  background-color: rgba(10, 82, 13, 0.05);
+  border-left-color: var(--green-primary);
+  color: var(--green-primary);
+  font-weight: 600;
+}
+
+/* Updated Logout Button for Desktop */
+.logout-button {
+  color: #dc2626 !important;
+  border-top: 1px solid var(--border-color);
+  padding: 15px 20px;
+  margin-top: 470px; /* Desktop par niche hi acha lagta hai */
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  background: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 600;
+}
+
+
+/* Mobile Specific */
+@media (max-width: 768px) {
+  .layout-container { padding-bottom: 70px; }
+  
+  .main-header {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    padding: 0 16px;
+    height: var(--mobile-header-height);
+  }
+  
+  .mobile-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(2px);
+    z-index: 1500;
+  }
+
+  .sidebar-menu-list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+  
+  .mobile-sidebar {
+    position: fixed;
+    top: 0; bottom: 0;
+    width: 280px;
+    background: var(--form-card-bg);
+    z-index: 2000;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+
+  /* Mobile par logout ko foran menu ke baad dikhane ke liye FIX */
+  .mobile-sidebar .logout-button {
+    margin-top: 452px !important; /* Fixed: 470px ko khatam kiya */
+    border-top: 1px solid var(--border-color);
+    background: #f9f9f9;
+  }
+
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: 65px;
+    background: var(--form-card-bg);
+    display: flex;
+    border-top: 1px solid var(--border-color);
+    z-index: 1000;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+  }
+  
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: var(--text-gray);
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .nav-item.active { color: var(--green-primary); }
+}
+
+@media (min-width: 769px) {
+  .desktop-main-content { margin-left: var(--desktop-sidebar-width); }
+  .desktop-content-area { padding: calc(var(--desktop-header-height) + 24px) 24px 24px; }
+}

@@ -1,0 +1,118 @@
+/* --- TeamPage.css --- */
+.team-container {
+    background-color: #F0F4F8;
+    padding: 1.2rem;
+    min-height: 100vh;
+}
+
+/* Team Stats Cards */
+.team-stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.team-stat-card {
+    background: white;
+    padding: 1.2rem;
+    border-radius: 18px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    text-align: center;
+}
+
+/* Spotlight Card for Team Header */
+.team-header-card {
+    position: relative;
+    background-color: #1a0b24; 
+    border-radius: 20px;
+    padding: 2rem;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    --x: -1000px;
+    --y: -1000px;
+}
+
+.team-grid-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+}
+
+/* Member Table/List */
+.member-card {
+    background: white;
+    border-radius: 18px;
+    padding: 1rem;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+    border: 1px solid #EDF2F7;
+}
+
+.member-image-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #E2E8F0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.member-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-info {
+    flex: 1;
+}
+
+.member-username {
+    font-weight: 800;
+    color: #1a0b24;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.member-email {
+    font-size: 0.75rem;
+    color: #718096;
+}
+
+.status-badge {
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+}
+
+.verified { background: #C6F6D5; color: #22543D; }
+.not-verified { background: #FED7D7; color: #822727; }
+
+.level-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: #6366F1;
+    background: #EEF2FF;
+    padding: 2px 8px;
+    border-radius: 4px;
+}

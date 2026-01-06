@@ -1,0 +1,121 @@
+/* --- DepositHistoryPage.css --- */
+.history-container {
+    background-color: #F0F4F8;
+    padding: 1.2rem;
+    min-height: 100vh;
+    padding-bottom: 5rem;
+}
+
+.history-header {
+    margin-bottom: 1.5rem;
+}
+
+.history-title {
+    font-size: 1.6rem;
+    font-weight: 850;
+    color: #1a0b24;
+    margin: 0;
+}
+
+/* Spotlight Card for Stats */
+.history-stats-card {
+    position: relative;
+    background: #1a0b24;
+    border-radius: 24px;
+    padding: 1.8rem;
+    color: white;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    --x: -1000px;
+    --y: -1000px;
+}
+
+.history-grid-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 25px 25px;
+    mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+}
+
+/* Transaction Cards */
+.txn-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.2rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+    border-left: 6px solid #CBD5E0;
+    animation: slideUp 0.4s ease-out;
+}
+
+.txn-approved { border-left-color: #2ECC71; }
+.txn-pending { border-left-color: #F59E0B; }
+.txn-rejected { border-left-color: #EF4444; }
+
+.txn-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.txn-amount {
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #1a0b24;
+}
+
+.txn-status-badge {
+    padding: 5px 12px;
+    border-radius: 10px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    text-transform: uppercase;
+}
+
+.status-approved { background: #DCFCE7; color: #166534; }
+.status-pending { background: #FEF3C7; color: #92400E; }
+
+.txn-body {
+    background: #F8FAFC;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.txn-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+}
+
+.txn-label {
+    color: #718096;
+    font-weight: 600;
+}
+
+.txn-value {
+    color: #2D3748;
+    font-weight: 700;
+}
+
+.screenshot-link {
+    color: #6366F1;
+    text-decoration: none;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}

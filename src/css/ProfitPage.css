@@ -1,0 +1,169 @@
+/* --- Global Container --- */
+.profit-container {
+    background-color: #F0F4F8;
+    padding: 1.2rem;
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #1A202C;
+    margin-bottom: 0.2rem;
+}
+
+.page-subtitle {
+    font-size: 0.85rem;
+    color: #718096;
+    margin-bottom: 1.5rem;
+}
+
+/* --- SPOTLIGHT CARD (Dark Purple) --- */
+.total-profit-card {
+    position: relative;
+    background-color: #1a0b24; 
+    border-radius: 20px;
+    padding: 2rem;
+    color: #FFFFFF;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    --x: -1000px;
+    --y: -1000px;
+}
+
+/* Light effect moving under mouse */
+.balance-grid-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+}
+
+.total-profit-card:hover .balance-grid-overlay {
+    opacity: 1;
+}
+
+.total-profit-content {
+    position: relative;
+    z-index: 2;
+}
+
+.total-profit-text {
+    font-size: 0.7rem;
+    font-weight: 600;
+    opacity: 0.6;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+}
+
+.total-profit-amount {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #FFFFFF;
+}
+
+.total-profit-icon {
+    font-size: 3.5rem;
+    color: #ffffff; /* Indigo/Blue Icon */
+    opacity: 0.4;
+    position: absolute;
+    right: 10px;
+    bottom: -10px;
+}
+
+/* --- Stats Cards --- */
+.stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+}
+
+.stat-card {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.stat-icon-box {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #4A5568;
+}
+
+.stat-val-text {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #2D3748;
+}
+
+/* --- Individual Plan Card --- */
+.plan-card {
+    background: #FFFFFF;
+    border-radius: 20px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.progress-bar-wrapper {
+    height: 8px;
+    background: #EDF2F7;
+    border-radius: 10px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #1a0b24; /* Blue color instead of green */
+    border-radius: 10px;
+}
+
+.cta-button {
+    background: #1a0b24;
+    color: white;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    font-weight: 700;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.animate-spin { animation: spin 1s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fade-in { animation: fadeIn 0.5s ease-in; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; } }

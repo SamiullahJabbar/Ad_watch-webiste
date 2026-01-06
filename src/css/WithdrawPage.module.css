@@ -1,0 +1,346 @@
+/* WithdrawPage.module.css */
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.container {
+  background: #F8FAFC;
+  color: #1E293B;
+  font-family: 'Inter', 'Segoe UI', 'Arial', sans-serif;
+  position: relative;
+}
+
+.mainContent {
+  padding-top: 1.5rem;
+  padding-bottom: 3rem;
+  padding-left: 2rem;
+  padding-right: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .mainContent {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+.pageTitle {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #1a0b24;
+  margin-bottom: 0.5rem;
+  text-align: center;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  .pageTitle {
+    font-size: 1.8rem;
+  }
+}
+
+.pageSubtitle {
+  font-size: 1rem;
+  color: #64748B;
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-weight: 400;
+}
+
+.formCard {
+  background: #FFFFFF;
+  border-radius: 20px;
+  padding: 2.5rem;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  animation: slideUp 0.6s ease-out;
+}
+
+@media (max-width: 768px) {
+  .formCard {
+    padding: 1.5rem;
+  }
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: #F8FAFC;
+  border: 2px solid #F8FAFC;
+  border-radius: 12px;
+  color: #1E293B;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #1a0b24;
+  box-shadow: 0 0 0 3px rgba(12, 19, 17, 0.2);
+}
+
+.primaryButton {
+  background: #1a0b24;
+  color: white;
+  border: none;
+  padding: 1.2rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: auto;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  box-shadow: 0 5px 15px rgba(182, 194, 191, 0.3);
+  margin: 0 auto;
+}
+
+.primaryButton:hover:not(.buttonDisabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(118, 124, 123, 0.4);
+}
+
+.buttonDisabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+  background: #94A3B8 !important;
+}
+
+.backButton {
+  background: #F8FAFC;
+  color: #64748B;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  padding: 1.2rem 2rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.backButton:hover {
+  background: #E2E8F0;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .buttonGroup {
+    flex-direction: column;
+  }
+  
+  .mobileButtonGroup {
+    flex-direction: column;
+  }
+  
+  .mobileFullWidth {
+    width: 100%;
+  }
+}
+
+.stepContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  padding: 0 10px;
+  max-width: 350px;
+  margin: 0 auto 2rem;
+}
+
+.stepItem {
+  flex: 1;
+  text-align: center;
+  padding: 0 5px;
+  position: relative;
+  transition: color 0.3s ease;
+  min-width: 30%;
+}
+
+.stepLine {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  right: -50%;
+  height: 3px;
+  background-color: rgba(148, 163, 184, 0.5);
+  z-index: 1;
+  transition: background-color 0.4s ease;
+}
+
+.stepLineActive {
+  background-color: #047857;
+}
+
+.stepTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #065F46;
+}
+
+.methodIcon {
+  font-size: 1.8rem;
+  margin-right: 1rem;
+  color: #181a19;
+}
+
+.methodName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1E293B;
+}
+
+.methodDetails {
+  font-size: 0.8rem;
+  color: #64748B;
+}
+
+.nextIcon {
+  transform: rotate(180deg);
+  margin-left: 0.5rem;
+}
+
+.successScreen {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  background: #FFFFFF;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.5);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+  animation: slideUp 0.6s ease-out 0.4s both;
+}
+
+.successIcon {
+  font-size: 4rem;
+  color: #10B981;
+  margin-bottom: 1rem;
+}
+
+.successTitle {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #065F46;
+  margin-bottom: 0.75rem;
+}
+
+.successMessage {
+  font-size: 1rem;
+  color: #64748B;
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.historyButton {
+  background: #FFFFFF;
+  color: #047857;
+  border: 1px solid rgba(4, 120, 87, 0.5);
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  box-shadow: none;
+}
+
+.historyButton:hover {
+  background: rgba(4, 120, 87, 0.05);
+}
+
+.historyToggleButton {
+  background: #FFFFFF;
+  color: #047857;
+  border: 1px solid rgba(4, 120, 87, 0.5);
+  padding: 1rem;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  max-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.5rem auto 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.historyToggleButton:hover {
+  background: rgba(4, 120, 87, 0.05);
+  transform: translateY(-2px);
+}
+
+.authLoadingContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+  background: #F8FAFC;
+}
+
+.authLoadingContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.loadingSpinner {
+  width: 50px;
+  height: 50px;
+  border: 3px solid rgba(148, 163, 184, 0.3);
+  border-top: 3px solid #047857;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingText {
+  color: #64748B;
+  font-size: 16px;
+  font-weight: 500;
+}

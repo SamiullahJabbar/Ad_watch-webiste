@@ -1,0 +1,120 @@
+/* --- SettingsPage.css --- */
+.settings-container {
+    background-color: #F0F4F8;
+    padding: 1.2rem;
+    min-height: 100vh;
+}
+
+.profile-header-card {
+    position: relative;
+    background-color: #1a0b24;
+    border-radius: 24px;
+    padding: 2.5rem 1.5rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    --x: -1000px;
+    --y: -1000px;
+}
+
+.settings-grid-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+}
+
+.avatar-wrapper {
+    position: relative;
+    width: 110px;
+    height: 110px;
+    margin: 0 auto 15px;
+}
+
+.main-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(255,255,255,0.2);
+    background: #2D3748;
+}
+
+.upload-icon-label {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: #6366F1;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border: 2px solid #1a0b24;
+    color: white;
+    font-size: 0.9rem;
+}
+
+.form-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.input-group {
+    margin-bottom: 1.2rem;
+}
+
+.input-group label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #718096;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    margin-left: 4px;
+}
+
+.styled-input {
+    width: 100%;
+    padding: 12px 15px;
+    border-radius: 12px;
+    border: 1px solid #E2E8F0;
+    background: #F8FAFC;
+    font-size: 1rem;
+    color: #2D3748;
+    box-sizing: border-box;
+}
+
+.styled-input:disabled {
+    background: #EDF2F7;
+    color: #A0AEC0;
+}
+
+.save-btn {
+    background: #1a0b24;
+    color: white;
+    width: 100%;
+    padding: 1rem;
+    border-radius: 15px;
+    border: none;
+    font-weight: 700;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.save-btn:active { transform: scale(0.98); }

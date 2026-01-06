@@ -1,0 +1,168 @@
+/* --- ReferralPage.css --- */
+.referral-container {
+    background-color: #F0F4F8;
+    padding: 1.2rem;
+    min-height: 100vh;
+}
+
+/* Spotlight Card for Referral Code */
+.referral-main-card {
+    position: relative;
+    background-color: #1a0b24; 
+    border-radius: 20px;
+    padding: 2rem;
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    --x: -1000px;
+    --y: -1000px;
+}
+
+.referral-grid-overlay {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+    background-size: 30px 30px;
+    mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+    -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
+}
+
+.code-box {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px dashed #FFD700;
+    padding: 1rem;
+    border-radius: 12px;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #FFD700;
+    margin: 1rem 0;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.share-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 1rem;
+}
+
+.share-btn {
+    padding: 0.8rem;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.wa-btn { background-color: #25D366; }
+.tg-btn { background-color: #0088cc; }
+
+/* List Section */
+.referral-list-section {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+}
+
+.referral-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #F1F5F9;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-email {
+    font-weight: 700;
+    color: #2D3748;
+    font-size: 0.9rem;
+}
+
+.user-date {
+    font-size: 0.75rem;
+    color: #718096;
+}
+
+.level-badge {
+    background: #EBF8FF;
+    color: #3182CE;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+
+/* --- Referral List Table Styling --- */
+.referral-table-container {
+    overflow-x: auto; /* For mobile responsiveness */
+    margin-top: 1rem;
+}
+
+.referral-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.referral-table th {
+    background-color: #F8FAFC;
+    color: #718096;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 12px 15px;
+    border-bottom: 2px solid #EDF2F7;
+}
+
+.referral-table td {
+    padding: 15px;
+    border-bottom: 1px solid #F1F5F9;
+    vertical-align: middle;
+}
+
+.user-cell {
+    display: flex;
+    flex-direction: column;
+}
+
+.username-text {
+    font-weight: 800;
+    color: #1a0b24;
+    font-size: 0.95rem;
+}
+
+.email-text {
+    font-size: 0.75rem;
+    color: #718096;
+}
+
+.date-text {
+    font-size: 0.8rem;
+    color: #4A5568;
+    font-weight: 600;
+}
+
+/* Level badge remains same as before */
