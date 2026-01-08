@@ -9,12 +9,22 @@ import DepositHistoryPage from './pages/DepositHistoryPage';
 import PlanHistory from './pages/PlanHistory';
 import Withdrew from './pages/Withdrew';
 import ProfitPage from './pages/ProfitPage';
-import TeamPage from './pages/TeamPage';
+import TeamPage from './pages/Team';
 import ProgressPage from './pages/ProgressPage';
+import ReferralPage from './pages/ReferralPage';
+import WithdrawHistoryPage from './pages/WithdrawHistoryPage';
+import SettingsPage from './pages/SettingsPage';
+
+
+
+
+
+import { CurrencyProvider } from "./CurrencyProvider";
 
 
 function App() {
   return (
+    <CurrencyProvider>
     <Router>
       <Routes>
         <Route path="/register" element={<RegisterPage />} />
@@ -26,12 +36,16 @@ function App() {
         <Route path="/DepositHistory" element={<DepositHistoryPage />} />
         <Route path="/PlanHistory" element={<PlanHistory />} />
         <Route path="/withdraw" element={<Withdrew />} />
-        <Route path="/profit" element={<ProfitPage />} />
+        <Route path="/myplan" element={<ProfitPage />} />
         <Route path="/Teams" element={<TeamPage />} />
         <Route path="/Progress" element={<ProgressPage />} />
+        <Route path="/ReferralProgram" element={<ReferralPage />} />
+        <Route path="/WithdrawHistory" element={<WithdrawHistoryPage />} />
+        <Route path="/Settings" element={<SettingsPage />} />
         
       </Routes>
     </Router>
+    </CurrencyProvider>
   );
 }
 

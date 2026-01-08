@@ -1,121 +1,120 @@
-/* --- DepositHistoryPage.css --- */
-.history-container {
-    background-color: #F0F4F8;
-    padding: 1.2rem;
-    min-height: 100vh;
-    padding-bottom: 5rem;
+/* --- Navigation Grid (Matches Withdraw History Style) --- */
+.nav-grid-history {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 25px;
 }
 
-.history-header {
-    margin-bottom: 1.5rem;
-}
-
-.history-title {
-    font-size: 1.6rem;
-    font-weight: 850;
-    color: #1a0b24;
-    margin: 0;
-}
-
-/* Spotlight Card for Stats */
-.history-stats-card {
-    position: relative;
-    background: #1a0b24;
-    border-radius: 24px;
-    padding: 1.8rem;
-    color: white;
-    overflow: hidden;
-    margin-bottom: 1.5rem;
-    --x: -1000px;
-    --y: -1000px;
-}
-
-.history-grid-overlay {
-    position: absolute;
-    top: 0; left: 0; width: 100%; height: 100%;
-    pointer-events: none;
-    background-image: 
-        linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
-    background-size: 25px 25px;
-    mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
-    -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%);
-}
-
-/* Transaction Cards */
-.txn-card {
+.nav-item-history {
     background: white;
-    border-radius: 20px;
-    padding: 1.2rem;
-    margin-bottom: 1rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    border-left: 6px solid #CBD5E0;
-    animation: slideUp 0.4s ease-out;
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
 }
 
-.txn-approved { border-left-color: #2ECC71; }
-.txn-pending { border-left-color: #F59E0B; }
-.txn-rejected { border-left-color: #EF4444; }
+.nav-item-history:active {
+    transform: scale(0.95);
+    background: #f8fafc;
+}
 
-.txn-top {
+.nav-icon-wrapper {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+    font-size: 1.1rem;
+}
+
+.nav-text-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #1a0b24;
+}
+
+/* --- Premium List Styling --- */
+.premium-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-bottom: 2rem;
+}
+
+.premium-txn-card {
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 14px 16px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
 }
 
-.txn-amount {
-    font-size: 1.3rem;
-    font-weight: 900;
-    color: #1a0b24;
+.txn-left-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
 }
 
-.txn-status-badge {
-    padding: 5px 12px;
-    border-radius: 10px;
-    font-size: 0.65rem;
-    font-weight: 900;
-    text-transform: uppercase;
-}
-
-.status-approved { background: #DCFCE7; color: #166534; }
-.status-pending { background: #FEF3C7; color: #92400E; }
-
-.txn-body {
-    background: #F8FAFC;
+.status-icon-box {
+    width: 44px;
+    height: 44px;
     border-radius: 12px;
-    padding: 12px;
     display: flex;
-    flex-direction: column;
-    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
 }
 
-.txn-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.8rem;
+.status-icon-box.approved { background: #E8F5E9; color: #2E7D32; }
+.status-icon-box.pending { background: #FFF8E1; color: #F57F17; }
+.status-icon-box.rejected { background: #FFEBEE; color: #C62828; }
+
+.txn-main-title {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #1A202C;
 }
 
-.txn-label {
+.txn-sub-text {
+    font-size: 0.72rem;
     color: #718096;
     font-weight: 600;
 }
 
-.txn-value {
-    color: #2D3748;
-    font-weight: 700;
-}
-
-.screenshot-link {
-    color: #6366F1;
-    text-decoration: none;
-    font-size: 0.75rem;
+.txn-right-section {
+    text-align: right;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-end;
     gap: 4px;
 }
 
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(15px); }
-    to { opacity: 1; transform: translateY(0); }
+.txn-amount-text {
+    font-size: 1rem;
+    font-weight: 900;
+    color: #1a0b24;
 }
+
+.txn-status-pill {
+    font-size: 0.6rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.txn-status-pill.approved { background: #2ecc71; color: white; }
+.txn-status-pill.pending { background: #F39C12; color: white; }
+.txn-status-pill.rejected { background: #E74C3C; color: white; }

@@ -1,364 +1,215 @@
-// WithdrawHistoryPage.js
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import BASE_URL from '../api/baseURL';
 import Layout from '../components/Layout'; 
 import { 
-    FaHistory, FaSpinner, FaUniversity, 
-    FaCheckCircle, FaClock, FaTimesCircle,
-    FaSearch, FaCalendarAlt, FaMoneyBillWave,
-    FaFilter, FaArrowLeft
+    FaHistory, FaCheckCircle, FaClock, 
+    FaTimesCircle, FaSearch, FaArrowLeft, FaFilter 
 } from 'react-icons/fa';
-// بس یہ CSS import کریں
-// بس یہ CSS import کریں
-import styles from '../css/WithdrawHistoryPage.module.css';
-// --- UTILITY FUNCTIONS ---
-const jwtDecode = (token) => {
-    if (!token) return null;
-    try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        }).join(''));
-        return JSON.parse(jsonPayload);
-    } catch (e) {
-        return null;
-    }
-};
+import { FiLoader } from 'react-icons/fi';
 
-const removeTokens = () => {
-    sessionStorage.removeItem('accessToken');
-    sessionStorage.removeItem('refreshToken');
-};
 
-// --- API Endpoints ---
-const WITHDRAW_HISTORY_ENDPOINT = `${BASE_URL}/transactions/withdraw/history/`;
+import { 
+    FiMenu, FiLogOut, FiBell, FiX, FiHome, 
+    FiSettings, FiLayers, FiShare2, FiStar 
+} from 'react-icons/fi';
 
-// --- COLOR CONSTANTS ---
-const GREEN_PRIMARY = '#047857';
-const BG_LIGHT = '#F8FAFC';
-const TEXT_DARK = '#1E293B';
-const TEXT_GRAY = '#64748B';
-const SUCCESS_GREEN = '#10B981';
-const ERROR_RED = '#EF4444';
-const WARNING_AMBER = '#F59E0B';
-
-function WithdrawHistoryPage() {
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-  const [authLoading, setAuthLoading] = useState(true);
-  const [history, setHistory] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
-  const [windowWidth] = useState(window.innerWidth);
-
-  const isMobile = windowWidth <= 768;
-
-  // Filtered History
-  const filteredHistory = useMemo(() => {
-    return history.filter(item => {
-      const matchesSearch = item.method.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.bank_account.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           item.amount.toString().includes(searchTerm);
-      
-      const matchesStatus = statusFilter === 'All' || item.status === statusFilter;
-      
-      return matchesSearch && matchesStatus;
-    });
-  }, [history, searchTerm, statusFilter]);
-
-  // Statistics
-  const stats = useMemo(() => {
-    const total = history.length;
-    const successful = history.filter(item => item.status === 'Successful').length;
-    const pending = history.filter(item => item.status === 'Pending').length;
-    const totalAmount = history.reduce((sum, item) => sum + parseFloat(item.amount), 0);
-    
-    return { total, successful, pending, totalAmount };
-  }, [history]);
-
-  // --- API FETCH FUNCTIONS ---
-  const fetchWithdrawHistory = async () => {
-    const token = sessionStorage.getItem('accessToken');
-    if (!token) return;
-
-    try {
-        setLoading(true);
-        const res = await axios.get(WITHDRAW_HISTORY_ENDPOINT, { 
-            headers: { Authorization: `Bearer ${token}` } 
-        });
-        setHistory(res.data);
-    } catch (err) {
-        console.error("History API Error:", err.response || err);
-        setHistory([]);
-    } finally {
-        setLoading(false);
-    }
-  };
-
-  // --- Authentication and Setup ---
-  useEffect(() => {
-    const checkAuth = () => {
-        const token = sessionStorage.getItem('accessToken');
-        
-        if (!token) {
-          navigate('/login');
-          return;
+// Spotlight Box Component for individual stats
+const StatSpotlightBox = ({ label, value, colorClass }) => {
+    const boxRef = useRef(null);
+    const handleMouseMove = (e) => {
+        if (boxRef.current) {
+            const rect = boxRef.current.getBoundingClientRect();
+            boxRef.current.style.setProperty('--x', `${e.clientX - rect.left}px`);
+            boxRef.current.style.setProperty('--y', `${e.clientY - rect.top}px`);
         }
-
-        const decodedPayload = jwtDecode(token);
-        
-        if (!decodedPayload) {
-             removeTokens();
-             navigate('/login');
-             return;
-        }
-
-        setAuthLoading(false);
     };
-
-    checkAuth();
-    fetchWithdrawHistory();
-  }, [navigate]);
-
-  const handleGoBack = () => {
-    navigate('/withdraw');
-  };
-
-  const handleGoHome = () => {
-    navigate('/');
-  };
-
-  const getStatusBadgeStyle = (status) => {
-    let color, bg, Icon;
-    if (status === 'Successful') { 
-        color = SUCCESS_GREEN; 
-        bg = 'rgba(16, 185, 129, 0.1)'; 
-        Icon = FaCheckCircle;
-    }
-    else if (status === 'Pending') { 
-        color = WARNING_AMBER; 
-        bg = 'rgba(245, 158, 11, 0.1)'; 
-        Icon = FaClock;
-    }
-    else { 
-        color = ERROR_RED; 
-        bg = 'rgba(239, 68, 68, 0.1)'; 
-        Icon = FaTimesCircle;
-    }
-
-    return {
-        padding: '0.4rem 0.8rem',
-        borderRadius: '20px',
-        fontWeight: '600',
-        fontSize: '0.8rem',
-        color: color,
-        background: bg,
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.4rem',
-        border: `1px solid ${color}30`,
-        width: 'fit-content'
-    };
-  };
-
-  // --- RENDER HISTORY ---
-  if (authLoading) {
     return (
-        <div className={styles.authLoadingContainer}>
-            <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } } body { margin: 0; background: ${BG_LIGHT}; }`}</style>
-            <div className={styles.authLoadingContent}>
-                <div className={styles.loadingSpinner}></div>
-                <div className={styles.loadingText}>Authenticating...</div>
+        <div 
+            className={`stat-spotlight-card ${colorClass}`} 
+            ref={boxRef} 
+            onMouseMove={handleMouseMove}
+            onMouseLeave={() => boxRef.current && boxRef.current.style.setProperty('--x', '-1000px')}
+        >
+            <div className="stat-grid-overlay"></div>
+            <div className="stat-card-content">
+                <div className="stat-card-label">{label}</div>
+                <div className="stat-card-value">{value}</div>
             </div>
         </div>
     );
-  }
+};
 
-  return (
-    <Layout activeTab="withdraw-history"> 
-      <style>
-        {`
-          @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-          body {
-            margin: 0;
-            background: ${BG_LIGHT};
-            overflow-x: hidden; 
-            max-width: 100vw;
-          }
-          .animate-spin {
-             animation: spin 1s linear infinite;
-          }
-        `}
-      </style>
-      
-      <main className={styles.mainContent}> 
-        <div className={styles.historyContainer}>
-          <div className={`${styles.historyHeader} ${isMobile ? styles.mobileHistoryHeader : ''}`}>
-            <div>
-              <h2 className={styles.historyTitle}>Withdrawal History</h2>
-              <p className={styles.historySubtitle}>Track and manage your withdrawal requests</p>
-            </div>
-            <button 
-                onClick={handleGoBack} 
-                className={styles.newWithdrawalButton}
-            >
-                <FaArrowLeft className={styles.backArrowIcon} /> Back to Withdraw
-            </button>
-          </div>
+function WithdrawHistoryPage() {
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+    const [history, setHistory] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');
+    const [statusFilter, setStatusFilter] = useState('All');
 
-          {/* Statistics Cards */}
-          <div className={`${styles.statsGrid} ${isMobile ? styles.mobileStatsGrid : ''}`}>
-            <div className={styles.statCard}>
-              <div className={styles.statValue}>{stats.total}</div>
-              <div className={styles.statLabel}>Total Requests</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statValue} style={{color: SUCCESS_GREEN}}>{stats.successful}</div>
-              <div className={styles.statLabel}>Successful</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statValue} style={{color: WARNING_AMBER}}>{stats.pending}</div>
-              <div className={styles.statLabel}>Pending</div>
-            </div>
-            <div className={styles.statCard}>
-              <div className={styles.statValue}>PKR {stats.totalAmount.toLocaleString()}</div>
-              <div className={styles.statLabel}>Total Withdrawn</div>
-            </div>
-          </div>
+    const fetchWithdrawHistory = useCallback(async () => {
+        const token = sessionStorage.getItem('accessToken');
+        if (!token) { navigate('/login'); return; }
+        try {
+            setLoading(true);
+            const res = await axios.get(`${BASE_URL}/transactions/withdraw/history/`, { 
+                headers: { Authorization: `Bearer ${token}` } 
+            });
+            setHistory(res.data);
+        } catch (err) {
+            console.error("History API Error:", err);
+        } finally {
+            setLoading(false);
+        }
+    }, [navigate]);
 
-          {/* Filters */}
-          <div className={styles.filtersContainer}>
-            <div className={`${styles.filterRow} ${isMobile ? styles.mobileFilterRow : ''}`}>
-              <div className={styles.searchContainer}>
-                <FaSearch className={styles.searchIcon} />
-                <input
-                  type="text"
-                  placeholder="Search by method, account, or amount..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className={styles.searchInput}
-                />
-              </div>
-              <select 
-                value={statusFilter} 
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className={styles.filterSelect}
-              >
-                <option value="All">All Status</option>
-                <option value="Pending">Pending</option>
-                <option value="Successful">Successful</option>
-                <option value="Failed">Failed</option>
-              </select>
-            </div>
-          </div>
+    useEffect(() => { fetchWithdrawHistory(); }, [fetchWithdrawHistory]);
 
-          {loading ? (
-            <div className={styles.loadingContainer}>
-              <FaSpinner className="animate-spin" style={{fontSize: '2rem', color: GREEN_PRIMARY}} />
-              <p>Loading Withdrawal History...</p>
-            </div>
-          ) : filteredHistory.length === 0 ? (
-            <div className={styles.emptyState}>
-              <FaHistory className={styles.emptyStateIcon} />
-              <h3>No Withdrawals Found</h3>
-              <p>
-                {history.length === 0 ? "You haven't made any withdrawals yet." : "No withdrawals match your search criteria."}
-              </p>
-              <button 
-                onClick={handleGoBack} 
-                className={styles.primaryButton}
-              >
-                Make Your First Withdrawal
-              </button>
-            </div>
-          ) : (
-            <div className={styles.historyTable}>
-              {/* Desktop Table Header */}
-              {!isMobile && (
-                <div className={styles.tableHeader}>
-                  <div>Amount</div>
-                  <div>Method</div>
-                  <div>Account Details</div>
-                  <div>Date</div>
-                  <div>Status</div>
-                </div>
-              )}
+    const filteredHistory = useMemo(() => {
+        return history.filter(item => {
+            const matchesSearch = (item.method || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                 (item.bank_account || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+                                 item.amount.toString().includes(searchTerm);
+            const matchesStatus = statusFilter === 'All' || item.status === statusFilter;
+            return matchesSearch && matchesStatus;
+        });
+    }, [history, searchTerm, statusFilter]);
 
-              {/* History Items */}
-              {filteredHistory.map((item) => {
-                const StatusIcon = item.status === 'Successful' ? FaCheckCircle : 
-                                 item.status === 'Pending' ? FaClock : FaTimesCircle;
+    const stats = useMemo(() => {
+        const successful = history.filter(item => item.status === 'Successful' || item.status === 'Approved');
+        const pending = history.filter(item => item.status === 'Pending');
+        const totalWithdrawn = successful.reduce((sum, item) => sum + parseFloat(item.amount), 0);
+        return {
+            total: history.length,
+            successCount: successful.length,
+            pendingCount: pending.length,
+            amount: totalWithdrawn.toLocaleString()
+        };
+    }, [history]);
+
+    return (
+        <Layout currentPath="/WithdrawHistory">
+            <style>{`
+                .withdraw-container { padding: 20px; max-width: 1200px; margin: auto; }
+                .withdraw-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
+                @media (min-width: 768px) { .withdraw-stats-grid { grid-template-columns: repeat(4, 1fr); } }
                 
-                return isMobile ? (
-                  // Mobile Card View
-                  <div key={item.id} className={styles.mobileCard}>
-                    <div className={styles.mobileCardHeader}>
-                      <div className={styles.mobileAmount}>
-                        PKR {parseFloat(item.amount).toLocaleString()}
-                      </div>
-                      <div style={getStatusBadgeStyle(item.status)}>
-                        <StatusIcon />
-                        {item.status}
-                      </div>
-                    </div>
-                    
-                    <div className={styles.mobileDetail}>
-                      <strong>Method:</strong> {item.method}
-                    </div>
-                    <div className={styles.mobileDetail}>
-                      <strong>Account:</strong> {item.bank_account}
-                    </div>
-                    {item.bank_name && (
-                      <div className={styles.mobileDetail}>
-                        <strong>Bank:</strong> {item.bank_name}
-                      </div>
-                    )}
-                    <div className={styles.mobileDate}>
-                      <FaCalendarAlt />
-                      {new Date(item.created_at).toLocaleDateString()} at {new Date(item.created_at).toLocaleTimeString()}
-                    </div>
-                  </div>
+                .stat-spotlight-card { position: relative; border-radius: 20px; padding: 22px; overflow: hidden; color: white; --x: -1000px; --y: -1000px; transition: transform 0.2s; }
+                .stat-spotlight-card:hover { transform: translateY(-5px); }
+                .purple-theme { background: #1a0b24; }
+                .green-theme { background: #059669; }
+                .amber-theme { background: #d97706; }
+                .dark-theme { background: #1e293b; }
+
+                .stat-grid-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 15px 15px; mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%); -webkit-mask-image: radial-gradient(120px circle at var(--x) var(--y), black 0%, transparent 100%); }
+                .stat-card-content { position: relative; z-index: 2; }
+                .stat-card-label { font-size: 0.7rem; opacity: 0.8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+                .stat-card-value { font-size: 1.2rem; font-weight: 900; margin-top: 8px; }
+
+                .section-title { font-size: 1.1rem; font-weight: 800; color: #1a0b24; margin: 25px 0 15px; }
+                .premium-filter-bar { display: flex; gap: 12px; margin-bottom: 20px; }
+                .p-search, .p-select { background: white; border: 1px solid #e2e8f0; border-radius: 15px; display: flex; align-items: center; padding: 0 15px; flex: 1; }
+                .p-search input, .p-select select { border: none; padding: 12px; width: 100%; outline: none; font-weight: 600; font-size: 0.9rem; background: transparent; }
+                
+                .premium-list-container { display: flex; flex-direction: column; gap: 12px; }
+                .premium-txn-card { background: white; padding: 18px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f1f5f9; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+                .txn-left { display: flex; align-items: center; gap: 15px; }
+                .icon-box { width: 50px; height: 50px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; }
+                .icon-box.successful, .icon-box.approved { background: #ecfdf5; color: #059669; }
+                .icon-box.pending { background: #fffbeb; color: #d97706; }
+                .icon-box.failed, .icon-box.rejected { background: #fef2f2; color: #dc2626; }
+                
+                .txn-main-title { font-weight: 800; color: #1e293b; font-size: 0.95rem; display: block; }
+                .txn-sub-text { font-size: 0.75rem; color: #64748b; font-weight: 600; }
+                .txn-right { text-align: right; }
+                .txn-amount { font-weight: 900; color: #1a0b24; font-size: 1.05rem; margin-bottom: 4px; }
+                .status-pill { font-size: 0.65rem; font-weight: 800; padding: 4px 10px; border-radius: 8px; text-transform: uppercase; color: white; }
+                .status-pill.successful, .status-pill.approved { background: #10b981; }
+                .status-pill.pending { background: #f59e0b; }
+                .status-pill.failed, .status-pill.rejected { background: #ef4444; }
+
+                .nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+                .nav-item { background: white; border: 1px solid #e2e8f0; padding: 15px; border-radius: 18px; display: flex; flex-direction: column; align-items: center; cursor: pointer; transition: 0.2s; }
+                .nav-item:active { transform: scale(0.95); }
+                .nav-icon { width: 40px; height: 40px; border-radius: 12px; background: #f8fafc; display: flex; align-items: center; justify-content: center; margin-bottom: 8px; }
+            `}</style>
+
+            <div className="withdraw-container">
+                {loading ? (
+                    <div className="loader-container" style={{display:'flex', justifyContent:'center', padding:'50px'}}><FiLoader className="animate-spin" size={30} /></div>
                 ) : (
-                  // Desktop Table Row
-                  <div key={item.id} className={styles.tableRow}>
-                    <div className={styles.tableAmount}>
-                      PKR {parseFloat(item.amount).toLocaleString()}
-                    </div>
-                    <div className={styles.tableMethod}>{item.method}</div>
-                    <div className={styles.tableAccount}>
-                      <div className={styles.accountNumber}>{item.bank_account}</div>
-                      {item.bank_name && (
-                        <div className={styles.bankName}>{item.bank_name}</div>
-                      )}
-                    </div>
-                    <div className={styles.tableDate}>
-                      {new Date(item.created_at).toLocaleDateString()}
-                      <br />
-                      {new Date(item.created_at).toLocaleTimeString()}
-                    </div>
-                    <div style={getStatusBadgeStyle(item.status)}>
-                      <StatusIcon />
-                      {item.status}
-                    </div>
-                  </div>
-                );
-              })}
+                    <>
+                        {/* 1. SEPARATE STATS BOXES WITH SPOTLIGHT */}
+                        <div className="withdraw-stats-grid">
+                            <StatSpotlightBox label="Total Requests" value={stats.total} colorClass="purple-theme" />
+                            <StatSpotlightBox label="Successful" value={stats.successCount} colorClass="green-theme" />
+                            <StatSpotlightBox label="Pending" value={stats.pendingCount} colorClass="amber-theme" />
+                            <StatSpotlightBox label="Total Withdrawn" value={`PKR ${stats.amount}`} colorClass="dark-theme" />
+                        </div>
+
+                        {/* 2. NAVIGATION SECTION */}
+                        <h2 className="section-title">Navigation</h2>
+                        <div className="nav-grid">
+                            <div onClick={() => navigate('/withdraw')} className="nav-item">
+                                <div className="nav-icon"><FaArrowLeft style={{color:'#ef4444'}}/></div>
+                                <span style={{fontSize:'0.8rem', fontWeight:'700'}}>Back</span>
+                            </div>
+                            <div onClick={() => navigate('/')} className="nav-item">
+                                <div className="nav-icon"><FiHome style={{color:'#2563eb'}}/></div>
+                                <span style={{fontSize:'0.8rem', fontWeight:'700'}}>Dashboard</span>
+                            </div>
+                        </div>
+
+                        {/* 3. SEARCH & FILTERS */}
+                        <h2 className="section-title">Filters</h2>
+                        <div className="premium-filter-bar">
+                            <div className="p-search">
+                                <FaSearch color="#94a3b8" />
+                                <input type="text" placeholder="Search account or amount..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+                            </div>
+                            <div className="p-select">
+                                <FaFilter color="#94a3b8" />
+                                <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+                                    <option value="All">All Status</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="Approved">Approved</option>
+                                    <option value="Failed">Failed</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        {/* 4. PREMIUM ACTIVITY LIST */}
+                        <h2 className="section-title">Withdrawal Activity</h2>
+                        <div className="premium-list-container">
+                            {filteredHistory.length > 0 ? (
+                                [...filteredHistory].reverse().map((item) => (
+                                    <div key={item.id} className="premium-txn-card">
+                                        <div className="txn-left">
+                                            <div className={`icon-box ${item.status.toLowerCase()}`}>
+                                                {(item.status === 'Successful' || item.status === 'Approved') ? <FaCheckCircle /> : item.status === 'Pending' ? <FaClock /> : <FaTimesCircle />}
+                                            </div>
+                                            <div className="txn-info">
+                                                <span className="txn-main-title">{item.method}</span>
+                                                <span className="txn-sub-text">{item.bank_account}</span>
+                                                <div style={{fontSize:'0.65rem', color:'#94a3b8', marginTop:'2px'}}>{new Date(item.created_at).toLocaleDateString()}</div>
+                                            </div>
+                                        </div>
+                                        <div className="txn-right">
+                                            <div className="txn-amount">PKR {parseFloat(item.amount).toLocaleString()}</div>
+                                            <span className={`status-pill ${item.status.toLowerCase()}`}>{item.status}</span>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div style={{textAlign:'center', padding:'40px', color:'#94a3b8', fontWeight:'700'}}>No history found.</div>
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
-          )}
-        </div>
-      </main>
-    </Layout>
-  );
+        </Layout>
+    );
 }
 
 export default WithdrawHistoryPage;

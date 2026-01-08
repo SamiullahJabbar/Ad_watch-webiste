@@ -3,12 +3,12 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Layout from '../components/Layout';
 import { 
-    FaHistory, FaChevronLeft, FaSpinner, FaReceipt, 
-    FaClock, FaRegCalendarAlt, FaMoneyBillAlt, 
-    FaUniversity, FaCheckCircle, FaHourglassHalf, 
-    FaImage, FaUser
+    FaHistory, FaCheckCircle, FaHourglassHalf, 
+    FaTimesCircle, FaPlus, FaArrowLeft 
 } from 'react-icons/fa';
+import { FiLoader } from 'react-icons/fi';
 import BASE_URL from '../api/baseURL';
+import '../css/Dashboard.css'; 
 import '../css/DepositHistoryPage.css';
 
 function DepositHistoryPage() {
@@ -16,6 +16,7 @@ function DepositHistoryPage() {
     const spotlightRef = useRef(null);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [stats, setStats] = useState({ approved: 0, pending: 0 });
 
     const handleMouseMove = (e) => {
         if (spotlightRef.current) {
@@ -27,99 +28,106 @@ function DepositHistoryPage() {
 
     const fetchHistory = useCallback(async () => {
         const token = sessionStorage.getItem('accessToken');
+        if (!token) { navigate('/login'); return; }
         try {
             const res = await axios.get(`${BASE_URL}/transactions/deposit/history/`, { 
                 headers: { Authorization: `Bearer ${token}` } 
             });
-            setHistory(res.data);
+            const data = res.data;
+            setHistory(data);
+            const apprv = data.filter(d => d.status === 'Approved').reduce((s, i) => s + parseFloat(i.amount), 0);
+            const pend = data.filter(d => d.status === 'Pending').reduce((s, i) => s + parseFloat(i.amount), 0);
+            setStats({ approved: apprv.toFixed(2), pending: pend.toFixed(2) });
         } catch (err) {
             console.error("Fetch error", err);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [navigate]);
 
-    useEffect(() => {
-        fetchHistory();
-    }, [fetchHistory]);
-
-    const getFullImageUrl = (path) => {
-        if (!path) return null;
-        return path.startsWith('http') ? path : `${BASE_URL.replace(/\/$/, "")}${path}`;
-    };
+    useEffect(() => { fetchHistory(); }, [fetchHistory]);
 
     return (
-        <Layout activeTab="deposit">
-            <div className="history-container">
-                <div className="history-header">
-                    <h2 className="history-title">Deposit History</h2>
-                    <p style={{color: '#718096', fontSize: '0.85rem'}}>View all your payment submissions</p>
-                </div>
-
-                {/* STATS SPOTLIGHT CARD */}
-                <div 
-                    className="history-stats-card" 
-                    ref={spotlightRef} 
-                    onMouseMove={handleMouseMove}
-                    onMouseLeave={() => spotlightRef.current.style.setProperty('--x', '-1000px')}
-                >
-                    <div className="history-grid-overlay"></div>
-                    <div style={{position: 'relative', zIndex: 2}}>
-                        <div style={{fontSize: '0.7rem', opacity: 0.8, textTransform: 'uppercase'}}>Payment Requests</div>
-                        <div style={{fontSize: '1.8rem', fontWeight: 900}}>{history.length} <span style={{fontSize: '0.9rem'}}>Items</span></div>
-                        <button onClick={() => navigate('/deposit')} className="deposit-back-btn" style={{marginTop:'10px', padding:'5px 15px', height:'auto', width:'auto'}}>
-                            + New Deposit
-                        </button>
-                    </div>
-                </div>
-
+        <Layout currentPath="/DepositHistory">
+            <div className="dashboard-container">
                 {loading ? (
-                    <div style={{textAlign: 'center', padding: '3rem'}}><FaSpinner className="animate-spin" style={{fontSize: '2rem', color: '#1a0b24'}} /></div>
-                ) : history.length > 0 ? (
-                    history.map((item) => (
-                        <div key={item.id} className={`txn-card txn-${item.status.toLowerCase()}`}>
-                            <div className="txn-top">
-                                <div className="txn-amount">
-                                    <span style={{fontSize: '0.8rem', color: '#718096'}}>PKR</span> {parseFloat(item.amount).toLocaleString()}
+                    <div className="loader-container"><FiLoader className="animate-spin" /></div>
+                ) : (
+                    <>
+                        {/* --- TOP PREMIUM STATS CARD --- */}
+                        <div 
+                            className="balance-card" 
+                            ref={spotlightRef} 
+                            onMouseMove={handleMouseMove}
+                            onMouseLeave={() => spotlightRef.current && spotlightRef.current.style.setProperty('--x', '-1000px')}
+                        >
+                            <div className="balance-grid-overlay"></div>
+                            <div className="balance-content">
+                                <div className="balance-stats-grid">
+                                    <div className="stat-item left">
+                                        <div className="stat-label">Total Deposits</div>
+                                        <div className="stat-value small">PKR {stats.approved}</div>
+                                    </div>
+                                    <div className="stat-item right">
+                                        <div className="stat-label">Pending Amount</div>
+                                        <div className="stat-value small highlight">PKR {stats.pending}</div>
+                                    </div>
+                                    <div className="stat-item left mt-4">
+                                        <div className="stat-label">Total Requests</div>
+                                        <div className="stat-value small" style={{fontSize: '0.9rem'}}>{history.length} </div>
+                                    </div>
+                                    <div className="stat-item right mt-4">
+                                        <div className="stat-label">Success Rate</div>
+                                        <div className="stat-value small" style={{fontSize: '0.9rem'}}>
+                                            {history.length > 0 ? ((history.filter(h=>h.status==='Approved').length / history.length) * 100).toFixed(0) : 0}%
+                                        </div>
+                                    </div>
                                 </div>
-                                <span className={`txn-status-badge status-${item.status.toLowerCase()}`}>
-                                    {item.status === 'Approved' ? <FaCheckCircle /> : <FaHourglassHalf />} {item.status}
-                                </span>
-                            </div>
-
-                            <div className="txn-body">
-                                <div className="txn-row">
-                                    <span className="txn-label"><FaUniversity /> Method/Bank</span>
-                                    <span className="txn-value">{item.method} ({item.bank_name})</span>
-                                </div>
-                                <div className="txn-row">
-                                    <span className="txn-label"><FaReceipt /> TXN ID</span>
-                                    <span className="txn-value" style={{fontSize:'0.7rem'}}>{item.transaction_id}</span>
-                                </div>
-                                <div className="txn-row">
-                                    <span className="txn-label"><FaUser /> Owner</span>
-                                    <span className="txn-value">{item.account_owner}</span>
-                                </div>
-                                <div className="txn-row" style={{marginTop: '5px'}}>
-                                    <a href={getFullImageUrl(item.screenshot)} target="_blank" rel="noreferrer" className="screenshot-link">
-                                        <FaImage /> View Screenshot
-                                    </a>
-                                    <span style={{fontSize: '0.7rem', color: '#94A3B8'}}>
-                                        <FaClock /> {new Date(item.created_at).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div style={{marginTop:'10px', fontSize:'0.7rem', color:'#94A3B8', textAlign:'right', fontWeight:700}}>
-                                <FaRegCalendarAlt /> {new Date(item.created_at).toLocaleDateString()}
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <div className="deposit-empty-history">
-                        <FaHistory style={{fontSize: '3rem', opacity: 0.2}} />
-                        <p>No history found.</p>
-                    </div>
+
+                        {/* --- NAVIGATION SECTION (Updated to match Withdraw History) --- */}
+                        <h2 className="section-title">Navigation</h2>
+                        <div className="nav-grid-history">
+                            <div onClick={() => navigate('/deposit')} className="nav-item-history">
+                                <div className="nav-icon-wrapper"><FaPlus style={{color:'#059669'}}/></div>
+                                <span className="nav-text-label">Deposit</span>
+                            </div>
+                            <div onClick={() => navigate('/')} className="nav-item-history">
+                                <div className="nav-icon-wrapper"><FaArrowLeft style={{color:'#2563EB'}}/></div>
+                                <span className="nav-text-label">Back</span>
+                            </div>
+                        </div>
+
+                        {/* --- PREMIUM TRANSACTION LIST --- */}
+                        <h2 className="section-title">Deposit Activity</h2>
+                        <div className="premium-list-container">
+                            {history.length > 0 ? (
+                                [...history].reverse().map((item) => (
+                                    <div key={item.id} className="premium-txn-card">
+                                        <div className="txn-left-section">
+                                            <div className={`status-icon-box ${item.status.toLowerCase()}`}>
+                                                {item.status === 'Approved' ? <FaCheckCircle /> : item.status === 'Pending' ? <FaHourglassHalf /> : <FaTimesCircle />}
+                                            </div>
+                                            <div className="txn-details">
+                                                <span className="txn-main-title">{item.bank_name || 'Bank Deposit'}</span>
+                                                <span className="txn-sub-text">ID: {item.transaction_id ? item.transaction_id.substring(0, 12) : 'N/A'}...</span>
+                                                <span className="txn-date-text" style={{fontSize:'0.65rem', color:'#94a3b8'}}>{new Date(item.created_at).toLocaleDateString()}</span>
+                                            </div>
+                                        </div>
+                                        <div className="txn-right-section">
+                                            <div className="txn-amount-text">PKR {parseFloat(item.amount).toLocaleString()}</div>
+                                            <div className={`txn-status-pill ${item.status.toLowerCase()}`}>
+                                                {item.status}
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="error-container">No transaction history found.</div>
+                            )}
+                        </div>
+                    </>
                 )}
             </div>
         </Layout>
