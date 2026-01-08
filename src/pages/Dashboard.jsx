@@ -2,17 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import Layout from '../components/Layout'; 
 import BASE_URL, { getAccessToken } from '../api/baseURL'; 
-import { FaDollarSign, FaWallet, FaUsers, FaHistory, FaRocket,      // Todo ke liye
-    FaClipboardList, FaUserPlus, FaWhatsapp } from 'react-icons/fa'; 
+import { FaDollarSign, FaWallet, FaUsers, FaHistory, FaClipboardList, FaUserPlus, FaWhatsapp } from 'react-icons/fa'; 
 import { FiLoader } from 'react-icons/fi'; 
 import InvestmentPlans from './InvestmentPlans';
 import '../css/Dashboard.css';
 import ReviewSlider from './ReviewSlider';
-
-
 import { FcPlanner } from "react-icons/fc";
+
 const QuickActionButton = ({ icon: Icon, label, color, path }) => (
-    <a href={path} className="action-btn-item">
+    <a href={path} className="action-btn-item" target={path.startsWith('http') ? "_blank" : "_self"} rel="noopener noreferrer">
         <div className="icon-box-wrapper">
             <Icon style={{ fontSize: '1.2rem', color: color }} />
         </div>
@@ -29,6 +27,7 @@ function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
+    const [whatsappLink, setWhatsappLink] = useState(null);   // <-- NEW STATE
 
     const isMobile = windowWidth <= 768;
     const balanceCardRef = useRef(null);
@@ -64,11 +63,12 @@ function Dashboard() {
         }
         try {
             const headers = { Authorization: `Bearer ${token}` };
-            const [walletRes, plansRes, depositRes, withdrawRes] = await Promise.all([
+            const [walletRes, plansRes, depositRes, withdrawRes, whatsappRes] = await Promise.all([
                 axios.get(`${BASE_URL}/transactions/wallet/detail/`, { headers }),
                 axios.get(`${BASE_URL}/transactions/plans/`, { headers }),
                 axios.get(`${BASE_URL}/transactions/deposit/history/`, { headers }),
-                axios.get(`${BASE_URL}/transactions/withdraw/history/`, { headers })
+                axios.get(`${BASE_URL}/transactions/withdraw/history/`, { headers }),
+                axios.get(`${BASE_URL}/accounts/whatsapp-link/`, { headers })   // <-- NEW CALL
             ]);
 
             setBalance(parseFloat(walletRes.data.balance || 0).toFixed(2));
@@ -76,6 +76,7 @@ function Dashboard() {
             setTotalDeposit(depositRes.data.filter(d => d.status === 'Approved').reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2));
             setTotalWithdraw(withdrawRes.data.filter(w => w.status === 'Approved').reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2));
             setPendingWithdraw(withdrawRes.data.filter(w => w.status === 'Pending').reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2));
+            setWhatsappLink(whatsappRes.data.link);   // <-- SAVE LINK
         } catch (err) {
             setError('Failed to fetch data.');
         } finally {
@@ -94,7 +95,7 @@ function Dashboard() {
                     <div className="error-container">{error}</div>
                 ) : (
                     <>
-                        {/* BALANCE CARD (Pure Stats) */}
+                        {/* BALANCE CARD */}
                         <div 
                             className={`balance-card ${isMobile ? 'mobile' : ''}`}
                             ref={balanceCardRef}
@@ -124,19 +125,19 @@ function Dashboard() {
                             </div>
                         </div>
 
-                        {/* NEW QUICK ACTIONS COLLECTION */}
+                        {/* QUICK ACTIONS */}
                         <h2 className="section-title">Collections</h2>
                         <div className="actions-grid-container">
                             <QuickActionButton icon={FaDollarSign} label="Deposit" color="#0a520d" path="/deposit" />
                             <QuickActionButton icon={FaWallet} label="Withdraw" color="#E53E3E" path="/withdraw" />
                             <QuickActionButton icon={FaHistory} label="History" color="#2563EB" path="/DepositHistory" />
                             <QuickActionButton icon={FaUsers} label="Teams" color="#388E3C" path="/Teams" />
-                            
-                            {/* New 4 Icons */}
                             <QuickActionButton icon={FaClipboardList} label="Todo" color="#8E44AD" path="/" />
                             <QuickActionButton icon={FcPlanner} label="Plans" color="#F39C12" path="/myplan" />
                             <QuickActionButton icon={FaUserPlus} label="Referral" color="#2ECC71" path="/ReferralProgram" />
-                            <QuickActionButton icon={FaWhatsapp} label="WhatsApp" color="#25D366" path="https://wa.me/923375494042" />
+                            {whatsappLink && (
+                                <QuickActionButton icon={FaWhatsapp} label="WhatsApp" color="#25D366" path={whatsappLink} />
+                            )}
                         </div>
 
                         <h2 className="section-title">Plan Activation</h2>
