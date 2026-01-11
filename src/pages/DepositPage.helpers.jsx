@@ -32,7 +32,7 @@ export const AMOUNT_OPTIONS = [3000, 5000, 10000];
 // METHOD_OPTIONS اب dynamic ہو جائیں گی API response سے
 
 // --- API Endpoints ---
-export const ACCOUNT_DETAILS_ENDPOINT = (BASE_URL) => `${BASE_URL}/wallet/admin/account-details/`;
+export const ACCOUNT_DETAILS_ENDPOINT = (BASE_URL) => `${BASE_URL}/wallet/account-details/`;
 export const DEPOSIT_SUBMIT_ENDPOINT = (BASE_URL) => `${BASE_URL}/transactions/deposit/`;
 export const DEPOSIT_HISTORY_ENDPOINT = (BASE_URL) => `${BASE_URL}/transactions/deposit/history/`;
 
