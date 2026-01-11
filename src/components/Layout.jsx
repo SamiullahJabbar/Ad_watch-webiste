@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
     FiMenu, FiLogOut, FiBell, FiX, FiHome, 
-    FiSettings, FiLayers, FiShare2, FiStar 
+    FiSettings, FiLayers, FiShare2, FiStar, FiChevronDown 
 } from 'react-icons/fi';
 import { 
     FaWhatsapp, FaHome, FaGift, FaUsers, 
@@ -39,9 +39,7 @@ const sidebarMenuItems = [
 const BREAKPOINTS = { mobile: 768 };
 
 function Layout({ children, currentPath = "/" }) {
-    // Currency Logic yahan se start ho rahi hai
     const { currency, changeCurrency } = useCurrency();
-    
     const [username, setUsername] = useState('Loading...');
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -73,7 +71,6 @@ function Layout({ children, currentPath = "/" }) {
         window.location.href = '/login'; 
     };
 
-    // --- UPDATED HEADER WITH CURRENCY DROPDOWN ---
     const Header = () => (
         <header className={`main-header ${isScrolled ? 'header-scrolled' : ''}`} 
                 style={!isMobile ? { 
@@ -92,17 +89,20 @@ function Layout({ children, currentPath = "/" }) {
                 </div>
             </div>
             
-            <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                {/* Custom Currency Dropdown added here */}
-                <select 
-                    value={currency} 
-                    onChange={(e) => changeCurrency(e.target.value)}
-                    className="currency-select-box"
-                >
-                    <option value="PKR">PKR (Rs)</option>
-                    <option value="USDT">USDT (₮)</option>
-                    <option value="TRX">TRX (TRX)</option>
-                </select>
+            <div className="header-right">
+                {/* --- PROFESSIONAL CURRENCY DROPDOWN --- */}
+                <div className="currency-selector-container">
+                    <select 
+                        value={currency} 
+                        onChange={(e) => changeCurrency(e.target.value)}
+                        className="currency-custom-select"
+                    >
+                        <option value="PKR">PKR (Rs)</option>
+                        <option value="USDT">USDT (₮)</option>
+                        <option value="TRX">TRX (TRX)</option>
+                    </select>
+                    <FiChevronDown className="select-icon" />
+                </div>
 
                 <button className="icon-button" onClick={() => alert('Notifications coming soon!')}>
                     <FiBell size={20} style={{ color: '#64748B' }} />

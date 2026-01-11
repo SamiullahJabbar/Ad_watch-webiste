@@ -159,7 +159,7 @@
 
 /* Mobile Specific */
 @media (max-width: 768px) {
-  .layout-container { padding-bottom: 70px; }
+  .layout-container { padding-bottom: 50px; }
   
   .main-header {
     position: fixed;
@@ -268,5 +268,74 @@
     .currency-select-box {
         padding: 4px 8px;
         font-size: 12px;
+    }
+}
+
+
+
+
+
+/* --- Professional Currency Selector Styles --- */
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.currency-selector-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.currency-custom-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #f1f5f9;
+    border: 1.5px solid #e2e8f0;
+    padding: 8px 32px 8px 12px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    outline: none;
+    min-width: 95px;
+}
+
+/* Hover effect */
+.currency-custom-select:hover {
+    background: #ffffff;
+    border-color: #0a520d;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* Focus effect */
+.currency-custom-select:focus {
+    border-color: #0a520d;
+    background: #ffffff;
+}
+
+/* Dropdown Arrow Icon */
+.select-icon {
+    position: absolute;
+    right: 10px;
+    pointer-events: none;
+    color: #64748b;
+    font-size: 16px;
+}
+
+/* Mobile Responsive adjustment */
+@media (max-width: 768px) {
+    .currency-custom-select {
+        padding: 6px 28px 6px 10px;
+        font-size: 13px;
+        min-width: 85px;
+        border-radius: 8px;
+    }
+    
+    .header-right {
+        gap: 8px;
     }
 }
