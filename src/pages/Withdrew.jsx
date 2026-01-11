@@ -23,7 +23,7 @@ const jwtDecode = (token) => {
 };
 
 const WITHDRAW_SUBMIT_ENDPOINT = `${BASE_URL}/transactions/withdraw/`;
-const ACCOUNTS_API_ENDPOINT = `${BASE_URL}/wallet/admin/account-details/`; // Your New API
+const ACCOUNTS_API_ENDPOINT = `${BASE_URL}/wallet/account-details/`; // Your New API
 const MIN_WITHDRAW_PKR = 1000; 
 
 function WithdrawPage() {
