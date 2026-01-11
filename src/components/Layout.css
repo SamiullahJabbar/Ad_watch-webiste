@@ -145,7 +145,7 @@
 
 /* Updated Logout Button for Desktop */
 .logout-button {
-  margin-top: 465px !important; 
+  margin-top: auto !important; 
   color: #dc2626 !important;
   border-top: 1px solid var(--border-color);
   width: 100%;
@@ -198,9 +198,10 @@
 
   /* Mobile par logout ko foran menu ke baad dikhane ke liye FIX */
   .mobile-sidebar .logout-button {
-    margin-top: 458px !important; /* Fixed: 470px ko khatam kiya */
+   margin-top: auto !important; /* Fixed: 470px ko khatam kiya */
     border-top: 1px solid var(--border-color);
     background: #f9f9f9;
+    height: 100vh;
   }
 
   .bottom-nav {
