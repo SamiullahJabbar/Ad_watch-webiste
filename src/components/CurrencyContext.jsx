@@ -3,8 +3,8 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 const CurrencyContext = createContext();
 
 export const CurrencyProvider = ({ children }) => {
-    const [currency, setCurrency] = useState(localStorage.getItem('app_currency') || 'PKR');
-    const [symbol, setSymbol] = useState(localStorage.getItem('app_symbol') || 'Rs');
+    const [currency, setCurrency] = useState(localStorage.getItem('app_currency') || 'USDT');
+    const [symbol, setSymbol] = useState(localStorage.getItem('app_symbol') || 'USDT');
     
     // Default rates (Starting rates)
     const [rates, setRates] = useState({ 
