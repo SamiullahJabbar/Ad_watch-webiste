@@ -389,7 +389,7 @@
 }
 
 .deposit-copy-btn:hover {
-  background: rgb(26, 11, 36);
+  background: rgb(246, 246, 247);
 }
 
 /* Form Elements */
@@ -650,4 +650,73 @@
   font-size: 16px;
   font-weight: 500;
   margin-top: 10px;
+}
+
+
+
+/* Dropdown Icon Styles */
+.deposit-dropdown-selected-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.deposit-dropdown-item-content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.deposit-dropdown-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.deposit-dropdown-item-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+}
+
+.deposit-dropdown-fallback-icon {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--green-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.deposit-dropdown-item .deposit-dropdown-fallback-icon {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+}
+
+/* Mobile dropdown item styling */
+.deposit-custom-dropdown-item {
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.deposit-custom-dropdown-item:hover {
+    background: var(--input-bg);
+}
+
+/* Desktop select dropdown option styling */
+.deposit-custom-dropdown-button option {
+    padding: 10px;
 }

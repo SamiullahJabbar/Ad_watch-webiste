@@ -14,12 +14,14 @@ import ProgressPage from './pages/ProgressPage';
 import ReferralPage from './pages/ReferralPage';
 import WithdrawHistoryPage from './pages/WithdrawHistoryPage';
 import SettingsPage from './pages/SettingsPage';
+import { CurrencyProvider } from './components/CurrencyContext';
+
+import ForgotPassword from './pages/ForgotPassword';
 
 
 
 
-
-import { CurrencyProvider } from "./CurrencyProvider";
+// import { CurrencyProvider } from "./CurrencyProvider";
 
 
 function App() {
@@ -42,6 +44,7 @@ function App() {
         <Route path="/ReferralProgram" element={<ReferralPage />} />
         <Route path="/WithdrawHistory" element={<WithdrawHistoryPage />} />
         <Route path="/Settings" element={<SettingsPage />} />
+        <Route path="/ForgotPassword" element={<ForgotPassword />} />
         
       </Routes>
     </Router>

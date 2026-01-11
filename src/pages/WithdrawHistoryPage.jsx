@@ -9,11 +9,13 @@ import {
 } from 'react-icons/fa';
 import { FiLoader } from 'react-icons/fi';
 
-
 import { 
     FiMenu, FiLogOut, FiBell, FiX, FiHome, 
     FiSettings, FiLayers, FiShare2, FiStar 
 } from 'react-icons/fi';
+
+// Currency Context Import
+import { useCurrency } from '../components/CurrencyContext';
 
 // Spotlight Box Component for individual stats
 const StatSpotlightBox = ({ label, value, colorClass }) => {
@@ -48,6 +50,9 @@ function WithdrawHistoryPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState('All');
 
+    // Currency tools nikaale
+    const { convert, symbol } = useCurrency();
+
     const fetchWithdrawHistory = useCallback(async () => {
         const token = sessionStorage.getItem('accessToken');
         if (!token) { navigate('/login'); return; }
@@ -80,13 +85,15 @@ function WithdrawHistoryPage() {
         const successful = history.filter(item => item.status === 'Successful' || item.status === 'Approved');
         const pending = history.filter(item => item.status === 'Pending');
         const totalWithdrawn = successful.reduce((sum, item) => sum + parseFloat(item.amount), 0);
+        
+        // Stats mein conversion apply ki
         return {
             total: history.length,
             successCount: successful.length,
             pendingCount: pending.length,
-            amount: totalWithdrawn.toLocaleString()
+            amount: convert(totalWithdrawn) 
         };
-    }, [history]);
+    }, [history, convert]); // convert dependency add ki
 
     return (
         <Layout currentPath="/WithdrawHistory">
@@ -145,7 +152,8 @@ function WithdrawHistoryPage() {
                             <StatSpotlightBox label="Total Requests" value={stats.total} colorClass="purple-theme" />
                             <StatSpotlightBox label="Successful" value={stats.successCount} colorClass="green-theme" />
                             <StatSpotlightBox label="Pending" value={stats.pendingCount} colorClass="amber-theme" />
-                            <StatSpotlightBox label="Total Withdrawn" value={`PKR ${stats.amount}`} colorClass="dark-theme" />
+                            {/* Updated: PKR replaced with dynamic symbol */}
+                            <StatSpotlightBox label="Total Withdrawn" value={`${symbol} ${stats.amount}`} colorClass="dark-theme" />
                         </div>
 
                         {/* 2. NAVIGATION SECTION */}
@@ -196,7 +204,8 @@ function WithdrawHistoryPage() {
                                             </div>
                                         </div>
                                         <div className="txn-right">
-                                            <div className="txn-amount">PKR {parseFloat(item.amount).toLocaleString()}</div>
+                                            {/* Updated: PKR replaced with symbol and conversion */}
+                                            <div className="txn-amount">{symbol} {convert(item.amount)}</div>
                                             <span className={`status-pill ${item.status.toLowerCase()}`}>{item.status}</span>
                                         </div>
                                     </div>

@@ -106,7 +106,6 @@
   left: 0;
   z-index: 1100;
 }
-
 .sidebar-title {
   font-size: 22px;
   font-weight: 800;
@@ -115,6 +114,7 @@
   -webkit-text-fill-color: transparent;
   padding: 0 20px;
   margin-bottom: 30px;
+  
 }
 
 .sidebar-item {
@@ -145,20 +145,17 @@
 
 /* Updated Logout Button for Desktop */
 .logout-button {
+  margin-top: 465px !important; 
   color: #dc2626 !important;
   border-top: 1px solid var(--border-color);
-  padding: 15px 20px;
-  margin-top: 470px; /* Desktop par niche hi acha lagta hai */
   width: 100%;
-  text-align: left;
-  cursor: pointer;
   background: #f8fafc;
   display: flex;
   align-items: center;
   gap: 12px;
   font-weight: 600;
+  padding: 15px 20px;
 }
-
 
 /* Mobile Specific */
 @media (max-width: 768px) {
@@ -195,11 +192,13 @@
     display: flex;
     flex-direction: column;
     overflow-y: auto;
+    height: 100%;
   }
+
 
   /* Mobile par logout ko foran menu ke baad dikhane ke liye FIX */
   .mobile-sidebar .logout-button {
-    margin-top: 452px !important; /* Fixed: 470px ko khatam kiya */
+    margin-top: 458px !important; /* Fixed: 470px ko khatam kiya */
     border-top: 1px solid var(--border-color);
     background: #f9f9f9;
   }
@@ -232,4 +231,42 @@
 @media (min-width: 769px) {
   .desktop-main-content { margin-left: var(--desktop-sidebar-width); }
   .desktop-content-area { padding: calc(var(--desktop-header-height) + 24px) 24px 24px; }
+}
+
+  @media (max-width: 768px) {
+  .mobile-sidebar {
+    overflow-y: hidden !important; /* Sidebar ka scroll band karne ke liye */
+    display: flex;
+    flex-direction: column;
+  } }
+
+
+
+
+
+
+
+
+  .currency-select-box {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background-color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.currency-select-box:hover {
+    border-color: #0a520d;
+}
+
+@media (max-width: 768px) {
+    .currency-select-box {
+        padding: 4px 8px;
+        font-size: 12px;
+    }
 }

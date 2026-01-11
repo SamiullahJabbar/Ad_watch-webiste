@@ -1,0 +1,26 @@
+.currency-converter {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 6px;
+  background: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+.currency-converter select {
+  margin: 5px 0;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+.price-box {
+  margin-top: 10px;
+  background: #fff;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.price-box p {
+  margin: 4px 0;
+  font-size: 14px;
+}

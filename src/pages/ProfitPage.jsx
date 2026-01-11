@@ -6,6 +6,9 @@ import Layout from '../components/Layout';
 import { FaCalendarAlt, FaSpinner, FaChartLine, FaExclamationCircle, FaMoneyBillWave, FaWallet } from 'react-icons/fa';
 import '../css/ProfitPage.css';
 
+// Currency Context Import
+import { useCurrency } from '../components/CurrencyContext';
+
 const PLAN_PROFIT_HISTORY_ENDPOINT = `${BASE_URL}/transactions/profit/history/`;
 const PLAN_HISTORY_ENDPOINT = `${BASE_URL}/transactions/plans/history/`;
 
@@ -24,6 +27,9 @@ const calculateProgress = (startDateStr, endDateStr) => {
 };
 
 function ProfitPage() {
+    // Currency context tools
+    const { convert, symbol } = useCurrency();
+    
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
     const [activePlansData, setActivePlansData] = useState([]);
@@ -97,15 +103,18 @@ function ProfitPage() {
                 </div>
                 <div className="info-row">
                     <span style={{color: '#718096', fontSize: '0.85rem'}}>Investment</span>
-                    <span style={{fontWeight: '700'}}>{parseFloat(plan.amount).toLocaleString()} PKR</span>
+                    {/* PKR removed, Symbol & Convert added */}
+                    <span style={{fontWeight: '700'}}>{symbol} {convert(plan.amount)}</span>
                 </div>
                 <div className="info-row">
                     <span style={{color: '#718096', fontSize: '0.85rem'}}>Daily Profit</span>
-                    <span style={{fontWeight: '700', color: '#ebbd25ff'}}>{parseFloat(plan.daily_profit || 0).toLocaleString()} PKR</span>
+                    {/* PKR removed, Symbol & Convert added */}
+                    <span style={{fontWeight: '700', color: '#ebbd25ff'}}>{symbol} {convert(plan.daily_profit || 0)}</span>
                 </div>
                 <div className="info-row">
                     <span style={{color: '#718096', fontSize: '0.85rem'}}>Total Earned</span>
-                    <span style={{fontWeight: '700', color: '#1A202C'}}>{parseFloat(plan.total_earned || 0).toLocaleString()} PKR</span>
+                    {/* PKR removed, Symbol & Convert added */}
+                    <span style={{fontWeight: '700', color: '#1A202C'}}>{symbol} {convert(plan.total_earned || 0)}</span>
                 </div>
                 <div style={{marginTop: '1.2rem'}}>
                     <div style={{display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', fontWeight: '700', marginBottom: '5px'}}>
@@ -131,7 +140,7 @@ function ProfitPage() {
     return (
         <Layout activeTab="invest">
             <div className="profit-container">
-                <h1 className="page-title">Profit Center</h1>
+                <h1 className="page-title">Plan Center</h1>
                 <p className="page-subtitle">Manage and track your active investments</p>
 
                 {activePlansData.length > 0 && (
@@ -146,7 +155,8 @@ function ProfitPage() {
                             <div className="balance-grid-overlay"></div>
                             <div className="total-profit-content">
                                 <div className="total-profit-text">Active Plans Profit</div>
-                                <div className="total-profit-amount">PKR {totalProfit.toLocaleString()}</div>
+                                {/* PKR removed, Symbol & Convert added */}
+                                <div className="total-profit-amount">{symbol} {convert(totalProfit)}</div>
                                 <div style={{marginTop: '10px', fontSize: '0.75rem', fontWeight: '700', color: '#ffffffff'}}>
                                     TRACKING {activePlansData.length} ACTIVE ASSETS
                                 </div>
@@ -160,7 +170,8 @@ function ProfitPage() {
                                 <div className="stat-icon-box"><FaWallet style={{color: '#eb6425ff'}}/></div>
                                 <div>
                                     <div style={{color: '#718096', fontSize: '0.65rem', fontWeight: '800'}}>TOTAL INVESTED</div>
-                                    <div className="stat-val-text">{totalInvestment.toLocaleString()}</div>
+                                    {/* PKR removed, Symbol & Convert added */}
+                                    <div className="stat-val-text">{symbol} {convert(totalInvestment)}</div>
                                 </div>
                             </div>
                             <div className="stat-card">

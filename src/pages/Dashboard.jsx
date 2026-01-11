@@ -9,6 +9,9 @@ import '../css/Dashboard.css';
 import ReviewSlider from './ReviewSlider';
 import { FcPlanner } from "react-icons/fc";
 
+// Currency Brain ko import kiya
+import { useCurrency } from '../components/CurrencyContext'; 
+
 const QuickActionButton = ({ icon: Icon, label, color, path }) => (
     <a href={path} className="action-btn-item" target={path.startsWith('http') ? "_blank" : "_self"} rel="noopener noreferrer">
         <div className="icon-box-wrapper">
@@ -19,6 +22,9 @@ const QuickActionButton = ({ icon: Icon, label, color, path }) => (
 );
 
 function Dashboard() {
+    // Currency context se convert aur symbol nikaale
+    const { convert, symbol } = useCurrency();
+
     const [balance, setBalance] = useState('0.00');
     const [totalDeposit, setTotalDeposit] = useState('0.00');
     const [totalWithdraw, setTotalWithdraw] = useState('0.00');
@@ -27,7 +33,7 @@ function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
-    const [whatsappLink, setWhatsappLink] = useState(null);   // <-- NEW STATE
+    const [whatsappLink, setWhatsappLink] = useState(null);
 
     const isMobile = windowWidth <= 768;
     const balanceCardRef = useRef(null);
@@ -68,7 +74,7 @@ function Dashboard() {
                 axios.get(`${BASE_URL}/transactions/plans/`, { headers }),
                 axios.get(`${BASE_URL}/transactions/deposit/history/`, { headers }),
                 axios.get(`${BASE_URL}/transactions/withdraw/history/`, { headers }),
-                axios.get(`${BASE_URL}/accounts/whatsapp-link/`, { headers })   // <-- NEW CALL
+                axios.get(`${BASE_URL}/accounts/whatsapp-link/`, { headers })
             ]);
 
             setBalance(parseFloat(walletRes.data.balance || 0).toFixed(2));
@@ -76,7 +82,7 @@ function Dashboard() {
             setTotalDeposit(depositRes.data.filter(d => d.status === 'Approved').reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2));
             setTotalWithdraw(withdrawRes.data.filter(w => w.status === 'Approved').reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2));
             setPendingWithdraw(withdrawRes.data.filter(w => w.status === 'Pending').reduce((sum, item) => sum + parseFloat(item.amount), 0).toFixed(2));
-            setWhatsappLink(whatsappRes.data.link);   // <-- SAVE LINK
+            setWhatsappLink(whatsappRes.data.link);
         } catch (err) {
             setError('Failed to fetch data.');
         } finally {
@@ -95,7 +101,7 @@ function Dashboard() {
                     <div className="error-container">{error}</div>
                 ) : (
                     <>
-                        {/* BALANCE CARD */}
+                        {/* BALANCE CARD - Updated with Conversion */}
                         <div 
                             className={`balance-card ${isMobile ? 'mobile' : ''}`}
                             ref={balanceCardRef}
@@ -107,19 +113,20 @@ function Dashboard() {
                                 <div className="balance-stats-grid">
                                     <div className="stat-item left">
                                         <div className="stat-label">Current Balance</div>
-                                        <div className="stat-value small">PKR {balance}</div>
+                                        {/* PKR remove kar ke symbol aur convert function laga diya */}
+                                        <div className="stat-value small">{symbol} {convert(balance)}</div>
                                     </div>
                                     <div className="stat-item right">
                                         <div className="stat-label">Total Deposit</div>
-                                        <div className="stat-value small">PKR {totalDeposit}</div>
+                                        <div className="stat-value small">{symbol} {convert(totalDeposit)}</div>
                                     </div>
                                     <div className="stat-item left mt-4">
                                         <div className="stat-label">Total Withdraw</div>
-                                        <div className="stat-value small">PKR {totalWithdraw}</div>
+                                        <div className="stat-value small">{symbol} {convert(totalWithdraw)}</div>
                                     </div>
                                     <div className="stat-item right mt-4">
                                         <div className="stat-label">Pending Withdraw</div>
-                                        <div className="stat-value small highlight">PKR {pendingWithdraw}</div>
+                                        <div className="stat-value small highlight">{symbol} {convert(pendingWithdraw)}</div>
                                     </div>
                                 </div>
                             </div>

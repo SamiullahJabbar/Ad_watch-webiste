@@ -11,14 +11,12 @@ import { getUsernameFromToken, removeTokens } from '../api/baseURL';
 import './Layout.css';
 
 import { IoPeople } from "react-icons/io5";
-
 import { FaCalendarAlt } from "react-icons/fa";
 import { IoMdSettings } from "react-icons/io";
 import { TbLogout2 } from "react-icons/tb";
 
-
-
-
+// Currency Context ko import kiya
+import { useCurrency } from './CurrencyContext';
 
 // Navigation Items for Bottom Bar
 const navItems = [
@@ -30,7 +28,6 @@ const navItems = [
 // Expanded Sidebar Menu Items
 const sidebarMenuItems = [
     { name: "Home", path: "/", icon: FiHome, color: '#0a520d' },
-    // { name: "Plans", path: "/plans", icon: FiLayers, color: '#388E3C' },
     { name: "My Plan", path: "/myplan", icon: FaCalendarAlt, color: '#0a520d' },
     { name: "Referral", path: "/ReferralProgram", icon: IoPeople, color: '#388E3C' },
     { name: "Deposit History", path: "/DepositHistory", icon: FaHistory, color: '#388E3C' },
@@ -42,6 +39,9 @@ const sidebarMenuItems = [
 const BREAKPOINTS = { mobile: 768 };
 
 function Layout({ children, currentPath = "/" }) {
+    // Currency Logic yahan se start ho rahi hai
+    const { currency, changeCurrency } = useCurrency();
+    
     const [username, setUsername] = useState('Loading...');
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1024);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -73,7 +73,7 @@ function Layout({ children, currentPath = "/" }) {
         window.location.href = '/login'; 
     };
 
-    // Shared Header Component
+    // --- UPDATED HEADER WITH CURRENCY DROPDOWN ---
     const Header = () => (
         <header className={`main-header ${isScrolled ? 'header-scrolled' : ''}`} 
                 style={!isMobile ? { 
@@ -91,7 +91,19 @@ function Layout({ children, currentPath = "/" }) {
                     <span className="header-text" style={{ fontSize: isMobile ? '16px' : '18px' }}>{username}</span>
                 </div>
             </div>
-            <div className="header-right">
+            
+            <div className="header-right" style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                {/* Custom Currency Dropdown added here */}
+                <select 
+                    value={currency} 
+                    onChange={(e) => changeCurrency(e.target.value)}
+                    className="currency-select-box"
+                >
+                    <option value="PKR">PKR (Rs)</option>
+                    <option value="USDT">USDT (₮)</option>
+                    <option value="TRX">TRX (TRX)</option>
+                </select>
+
                 <button className="icon-button" onClick={() => alert('Notifications coming soon!')}>
                     <FiBell size={20} style={{ color: '#64748B' }} />
                     <div className="notification-dot"></div>
@@ -103,9 +115,7 @@ function Layout({ children, currentPath = "/" }) {
         </header>
     );
 
-    // Sidebar Item Component to avoid repetition
     const SidebarLinks = ({ closeMobile }) => (
-    <>
         <div className="sidebar-menu-list">
             {sidebarMenuItems.map((item, index) => (
                 <a 
@@ -119,13 +129,11 @@ function Layout({ children, currentPath = "/" }) {
                     {item.name}
                 </a>
             ))}
-            {/* Logout button ko foran yahan rakha gaya hai */}
             <button className="sidebar-item logout-button" onClick={handleLogout}>
                 <TbLogout2 size={18} /> Log Out
             </button>
         </div>
-    </>
-);
+    );
 
     if (!isMobile) {
         return (

@@ -29,7 +29,7 @@ export const decodeJwt = (token) => {
 // --- Constants ---
 export const MIN_AMOUNT = 3000;
 export const AMOUNT_OPTIONS = [3000, 5000, 10000];
-export const METHOD_OPTIONS = ['JazzCash', 'Easypaisa', 'BankTransfer'];
+// METHOD_OPTIONS اب dynamic ہو جائیں گی API response سے
 
 // --- API Endpoints ---
 export const ACCOUNT_DETAILS_ENDPOINT = (BASE_URL) => `${BASE_URL}/wallet/admin/account-details/`;
@@ -60,46 +60,45 @@ export const validateStep3 = (formData) => {
     return null;
 };
 
-// --- Method Details Helper ---
-export const getMethodDetails = (method, accountDetails) => {
-    if (!accountDetails) return { 
-        number: 'Loading...', 
-        owner: 'Loading...', 
-        image: null, 
-        detail: 'Loading...',
-        icon: null 
-    };
-
-    const baseDetails = {
-        owner: accountDetails.owner_name || 'N/A',
-        icon: null
-    };
-
-    switch (method) {
-        case 'JazzCash':
-            return {
-                ...baseDetails,
-                number: accountDetails.jazzcash_number || 'N/A',
-                image: accountDetails.jazzcash_image,
-                detail: 'Send to JazzCash Number',
-            };
-        case 'Easypaisa':
-            return {
-                ...baseDetails,
-                number: accountDetails.easypaisa_number || 'N/A',
-                image: accountDetails.easypaisa_image,
-                detail: 'Send to EasyPaisa Number',
-            };
-        case 'BankTransfer':
-            return {
-                ...baseDetails,
-                number: accountDetails.bank_account || 'N/A',
-                image: accountDetails.bank_image,
-                detail: `Bank: ${accountDetails.bank_name || 'N/A'}`,
-            };
-        default:
-            return null;
+// --- Method Details Helper (اپڈیٹ شدہ) ---
+export const getMethodDetails = (methodId, accountDetails) => {
+    if (!accountDetails || !Array.isArray(accountDetails) || accountDetails.length === 0) {
+        return { 
+            number: 'Loading...', 
+            owner: 'Loading...', 
+            icon: null,
+            detail: 'Loading...',
+            account_name: 'Loading...'
+        };
     }
+
+    // Find account by methodId (which is now account id)
+    const account = accountDetails.find(acc => acc.id.toString() === methodId);
+    
+    if (!account) {
+        return null;
+    }
+
+    return {
+        number: account.account_number || 'N/A',
+        owner: account.owner_name || 'N/A',
+        icon: account.account_icon || null,
+        detail: `Account: ${account.account_name}`,
+        account_name: account.account_name || 'N/A'
+    };
+};
+
+// --- Get Method Options from API Response ---
+export const getMethodOptions = (accountDetails) => {
+    if (!accountDetails || !Array.isArray(accountDetails)) {
+        return [];
+    }
+    
+    return accountDetails.map(account => ({
+        id: account.id.toString(),
+        name: account.account_name,
+        icon: account.account_icon
+    }));
 };
 
 // --- File Validation ---

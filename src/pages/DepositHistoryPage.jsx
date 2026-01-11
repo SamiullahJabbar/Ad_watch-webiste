@@ -11,12 +11,18 @@ import BASE_URL from '../api/baseURL';
 import '../css/Dashboard.css'; 
 import '../css/DepositHistoryPage.css';
 
+// Sahi path ke sath Currency Context import kiya
+import { useCurrency } from '../components/CurrencyContext';
+
 function DepositHistoryPage() {
     const navigate = useNavigate();
     const spotlightRef = useRef(null);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [stats, setStats] = useState({ approved: 0, pending: 0 });
+
+    // Currency tools nikaale
+    const { convert, symbol } = useCurrency();
 
     const handleMouseMove = (e) => {
         if (spotlightRef.current) {
@@ -66,11 +72,13 @@ function DepositHistoryPage() {
                                 <div className="balance-stats-grid">
                                     <div className="stat-item left">
                                         <div className="stat-label">Total Deposits</div>
-                                        <div className="stat-value small">PKR {stats.approved}</div>
+                                        {/* PKR hataya, Symbol aur Convert lagaya */}
+                                        <div className="stat-value small">{symbol} {convert(stats.approved)}</div>
                                     </div>
                                     <div className="stat-item right">
                                         <div className="stat-label">Pending Amount</div>
-                                        <div className="stat-value small highlight">PKR {stats.pending}</div>
+                                        {/* PKR hataya, Symbol aur Convert lagaya */}
+                                        <div className="stat-value small highlight">{symbol} {convert(stats.pending)}</div>
                                     </div>
                                     <div className="stat-item left mt-4">
                                         <div className="stat-label">Total Requests</div>
@@ -86,7 +94,7 @@ function DepositHistoryPage() {
                             </div>
                         </div>
 
-                        {/* --- NAVIGATION SECTION (Updated to match Withdraw History) --- */}
+                        {/* --- NAVIGATION SECTION --- */}
                         <h2 className="section-title">Navigation</h2>
                         <div className="nav-grid-history">
                             <div onClick={() => navigate('/deposit')} className="nav-item-history">
@@ -116,7 +124,8 @@ function DepositHistoryPage() {
                                             </div>
                                         </div>
                                         <div className="txn-right-section">
-                                            <div className="txn-amount-text">PKR {parseFloat(item.amount).toLocaleString()}</div>
+                                            {/* List mein bhi amount convert kar di */}
+                                            <div className="txn-amount-text">{symbol} {convert(item.amount)}</div>
                                             <div className={`txn-status-pill ${item.status.toLowerCase()}`}>
                                                 {item.status}
                                             </div>
