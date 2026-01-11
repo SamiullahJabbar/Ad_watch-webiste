@@ -159,7 +159,9 @@
 
 /* Mobile Specific */
 @media (max-width: 768px) {
-  .layout-container { padding-bottom: 50px; }
+  .layout-container { 
+    padding-bottom: 50px; 
+  }
   
   .main-header {
     position: fixed;
@@ -195,13 +197,24 @@
     height: 100%;
   }
 
+  /* FIXED: Mobile sidebar ke liye logout button ko bottom pe fix */
+  .mobile-sidebar .sidebar-menu-list {
+    flex: 1;
+    overflow-y: auto;
+  }
 
-  /* Mobile par logout ko foran menu ke baad dikhane ke liye FIX */
-  .mobile-sidebar .logout-button {
-   margin-top: auto !important; /* Fixed: 470px ko khatam kiya */
+  /* Mobile sidebar ka logout button bottom pe fixed */
+  .mobile-sidebar .logout-button-wrapper {
+    margin-top: auto;
+    width: 100%;
     border-top: 1px solid var(--border-color);
     background: #f9f9f9;
-    height: 100vh;
+  }
+
+  .mobile-sidebar .logout-button {
+    margin-top: 0 !important;
+    width: 100%;
+    border-top: none;
   }
 
   .bottom-nav {
@@ -226,117 +239,85 @@
     font-size: 11px;
     font-weight: 600;
   }
-  .nav-item.active { color: var(--green-primary); }
+  
+  .nav-item.active { 
+    color: var(--green-primary); 
+  }
 }
 
 @media (min-width: 769px) {
-  .desktop-main-content { margin-left: var(--desktop-sidebar-width); }
-  .desktop-content-area { padding: calc(var(--desktop-header-height) + 24px) 24px 24px; }
-}
-
-  @media (max-width: 768px) {
-  .mobile-sidebar {
-    overflow-y: hidden !important; /* Sidebar ka scroll band karne ke liye */
-    display: flex;
-    flex-direction: column;
-  } }
-
-
-
-
-
-
-
-
-  .currency-select-box {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    background-color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    color: #334155;
-    cursor: pointer;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.currency-select-box:hover {
-    border-color: #0a520d;
+  .desktop-main-content { 
+    margin-left: var(--desktop-sidebar-width); 
+  }
+  
+  .desktop-content-area { 
+    padding: calc(var(--desktop-header-height) + 24px) 24px 24px; 
+  }
 }
 
 @media (max-width: 768px) {
-    .currency-select-box {
-        padding: 4px 8px;
-        font-size: 12px;
-    }
+  .mobile-sidebar {
+    overflow-y: hidden !important;
+    display: flex;
+    flex-direction: column;
+  }
 }
-
-
-
-
 
 /* --- Professional Currency Selector Styles --- */
-.header-right {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
 .currency-selector-container {
-    position: relative;
-    display: flex;
-    align-items: center;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .currency-custom-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background: #f1f5f9;
-    border: 1.5px solid #e2e8f0;
-    padding: 8px 32px 8px 12px;
-    border-radius: 12px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #1e293b;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    outline: none;
-    min-width: 95px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #f1f5f9;
+  border: 1.5px solid #e2e8f0;
+  padding: 8px 32px 8px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  outline: none;
+  min-width: 95px;
 }
 
 /* Hover effect */
 .currency-custom-select:hover {
-    background: #ffffff;
-    border-color: #0a520d;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  background: #ffffff;
+  border-color: #0a520d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 /* Focus effect */
 .currency-custom-select:focus {
-    border-color: #0a520d;
-    background: #ffffff;
+  border-color: #0a520d;
+  background: #ffffff;
 }
 
 /* Dropdown Arrow Icon */
 .select-icon {
-    position: absolute;
-    right: 10px;
-    pointer-events: none;
-    color: #64748b;
-    font-size: 16px;
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+  color: #64748b;
+  font-size: 16px;
 }
 
 /* Mobile Responsive adjustment */
 @media (max-width: 768px) {
-    .currency-custom-select {
-        padding: 6px 28px 6px 10px;
-        font-size: 13px;
-        min-width: 85px;
-        border-radius: 8px;
-    }
-    
-    .header-right {
-        gap: 8px;
-    }
+  .currency-custom-select {
+    padding: 6px 28px 6px 10px;
+    font-size: 13px;
+    min-width: 85px;
+    border-radius: 8px;
+  }
+  
+  .header-right {
+    gap: 8px;
+  }
 }
