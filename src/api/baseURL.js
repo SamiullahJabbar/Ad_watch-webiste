@@ -34,7 +34,10 @@ import { jwtDecode } from 'jwt-decode';
 
 
 // const BASE_URL = "https://establishment-ton-counts-nam.trycloudflare.com/api"; 
-const BASE_URL = "http://127.0.0.1:8000/api"; 
+// const BASE_URL = "http://127.0.0.1:8000/api"; 
+const BASE_URL = "https://api.advisionads.com/api"; 
+
+
 
 // FIX: Now uses the correct key 'accessToken'
 export const saveAccessToken = (token) => {
