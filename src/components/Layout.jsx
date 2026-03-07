@@ -3,10 +3,10 @@ import {
     FiMenu, FiLogOut, FiBell, FiX, FiHome, 
     FiSettings, FiLayers, FiShare2, FiStar, FiChevronDown 
 } from 'react-icons/fi';
-import { 
-    FaWhatsapp, FaHome, FaGift, FaUsers, 
-    FaHistory, FaRegGem 
-} from 'react-icons/fa'; 
+import {
+    FaWhatsapp, FaHome, FaGift, FaUsers,
+    FaHistory, FaRegGem, FaPlayCircle
+} from 'react-icons/fa';
 import { getUsernameFromToken, removeTokens } from '../api/baseURL'; 
 import './Layout.css';
 
@@ -33,6 +33,7 @@ const sidebarMenuItems = [
     { name: "Deposit History", path: "/DepositHistory", icon: FaHistory, color: '#388E3C' },
     { name: "Withdraw History", path: "/WithdrawHistory", icon: FaHistory, color: '#DC2626' },
     { name: "My Team", path: "/Teams", icon: FaUsers, color: '#092757ff' },
+    { name: "Daily Video", path: "/Progress", icon: FaPlayCircle, color: '#F59E0B' },
     { name: "Settings", path: "/Settings", icon: IoMdSettings, color: '#202122ff' },
 ];
 

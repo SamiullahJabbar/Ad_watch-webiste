@@ -5,7 +5,7 @@ import BASE_URL, { getAccessToken } from '../api/baseURL';
 import '../css/InvestmentPlans.css';
 
 // Currency Context ko import kiya
-import { useCurrency } from '../components/CurrencyContext'; 
+import { useCurrency } from '../components/CurrencyContext';
 
 // --- 1. PROFESSIONAL TOAST NOTIFICATION COMPONENT ---
 const Toast = ({ show, message, type, onClose }) => {
@@ -39,17 +39,17 @@ const ConfirmModal = ({ isOpen, onCancel, onConfirm, planName }) => {
             <div className="custom-modal-content">
                 <h3>Confirm Investment</h3>
                 <p>To activate <strong>{planName}</strong>, please type <b>CONFIRM</b> below:</p>
-                <input 
-                    type="text" 
-                    placeholder="Type CONFIRM here" 
-                    value={inputValue} 
-                    onChange={(e) => setInputValue(e.target.value)} 
+                <input
+                    type="text"
+                    placeholder="Type CONFIRM here"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
                 />
                 <div className="modal-actions">
                     <button className="cancel-btn" onClick={() => { setInputValue(''); onCancel(); }}>Cancel</button>
-                    <button 
-                        className="confirm-btn" 
-                        disabled={inputValue !== 'CONFIRM'} 
+                    <button
+                        className="confirm-btn"
+                        disabled={inputValue !== 'CONFIRM'}
                         onClick={() => { setInputValue(''); onConfirm(); }}
                     >
                         Activate Now
@@ -61,7 +61,7 @@ const ConfirmModal = ({ isOpen, onCancel, onConfirm, planName }) => {
 };
 
 // --- 3. VIDEO MODAL WITH AUTO-REWARD LOGIC ---
-const VideoModal = ({ url, onClose, day, investmentId, onRewardSuccess, showToast }) => {
+const VideoModal = ({ url, onClose, day, investmentId, onRewardSuccess, showToast, onVideoComplete }) => {
     const [isVideoEnded, setIsVideoEnded] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -69,7 +69,7 @@ const VideoModal = ({ url, onClose, day, investmentId, onRewardSuccess, showToas
         const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
         const match = url.match(regExp);
         const videoId = (match && match[2].length === 11) ? match[2] : null;
-        return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0`;
+        return `https://www.youtube.com/embed/${videoId}?enablejsapi=1&rel=0&playsinline=1`;
     };
 
     useEffect(() => {
@@ -90,6 +90,22 @@ const VideoModal = ({ url, onClose, day, investmentId, onRewardSuccess, showToas
                 }
             });
         };
+
+        if (window.YT && window.YT.Player) {
+            setTimeout(() => {
+                try {
+                    new window.YT.Player('task-video-player', {
+                        events: {
+                            'onStateChange': (event) => {
+                                if (event.data === window.YT.PlayerState.ENDED) {
+                                    setIsVideoEnded(true);
+                                }
+                            }
+                        }
+                    });
+                } catch (e) { }
+            }, 500);
+        }
     }, []);
 
     const handleComplete = async () => {
@@ -101,9 +117,17 @@ const VideoModal = ({ url, onClose, day, investmentId, onRewardSuccess, showToas
                 investment_id: investmentId,
                 day_number: day
             }, { headers: { Authorization: `Bearer ${token}` } });
-            
+
             showToast(res.data.message || "Reward credited!", "success");
-            onRewardSuccess(); 
+            // ✅ Parent ko signal do ke video complete ho gayi hai
+            if (onVideoComplete) {
+                onVideoComplete({
+                    completed: true,
+                    nextAvailableAt: res.data.next_video_available_at,
+                    hoursRemaining: res.data.timer_hours
+                });
+            }
+            onRewardSuccess();
             onClose();
         } catch (err) {
             const errorMsg = err.response?.data?.error || err.response?.data?.message || "Task failed";
@@ -114,19 +138,19 @@ const VideoModal = ({ url, onClose, day, investmentId, onRewardSuccess, showToas
     };
 
     return (
-        <div className="video-overlay">
-            <div className="video-container">
-                <div className="video-header">
+        <div className="modal-video-overlay">
+            <div className="modal-video-container">
+                <div className="modal-video-header">
                     <span>Day {day} - Watch to Earn</span>
                     <FaTimesCircle onClick={onClose} className="close-icon" />
                 </div>
-                <div className="video-frame">
-                    <iframe id="task-video-player" src={getEmbedUrl(url)} title="Task Video" frameBorder="0" allowFullScreen></iframe>
+                <div className="modal-video-frame">
+                    <iframe id="task-video-player" src={getEmbedUrl(url)} title="Task Video" frameBorder="0"></iframe>
                 </div>
                 {!isVideoEnded && <p className="video-hint">Please watch the full video to unlock your reward.</p>}
-                <button 
-                    className={`complete-btn ${!isVideoEnded ? 'locked' : ''}`} 
-                    onClick={handleComplete} 
+                <button
+                    className={`modal-complete-btn ${!isVideoEnded ? 'locked' : ''}`}
+                    onClick={handleComplete}
                     disabled={!isVideoEnded || isSubmitting}
                 >
                     {isSubmitting ? "Processing..." : (isVideoEnded ? "Claim Reward" : "Video Locked")}
@@ -147,7 +171,12 @@ const InvestmentPlans = () => {
     const [showVideo, setShowVideo] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    
+
+    // ✅ Timer states
+    const [videoLocked, setVideoLocked] = useState(false);
+    const [countdown, setCountdown] = useState('');
+    const [nextAvailableAt, setNextAvailableAt] = useState(null);
+
     const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
     const [confirmModal, setConfirmModal] = useState({ show: false, planId: null, planName: '' });
 
@@ -155,6 +184,66 @@ const InvestmentPlans = () => {
 
     const showToast = (message, type = 'success') => {
         setToast({ show: true, message, type });
+    };
+
+    // ✅ Timer calculate karne ka function
+    const calculateTimeRemaining = (nextAvailableAtStr) => {
+        if (!nextAvailableAtStr) return null;
+
+        const now = new Date();
+        const nextAvailable = new Date(nextAvailableAtStr);
+        const diff = nextAvailable - now;
+
+        if (diff <= 0) {
+            return null; // Timer expire ho gaya
+        }
+
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        return { hours, minutes, seconds, totalMs: diff };
+    };
+
+    // ✅ Countdown update karne ka function
+    const updateCountdown = () => {
+        if (nextAvailableAt) {
+            const remaining = calculateTimeRemaining(nextAvailableAt);
+            if (remaining) {
+                const h = String(remaining.hours).padStart(2, '0');
+                const m = String(remaining.minutes).padStart(2, '0');
+                const s = String(remaining.seconds).padStart(2, '0');
+                setCountdown(`${h}:${m}:${s}`);
+            } else {
+                // Timer expire ho gaya - refresh karo
+                setVideoLocked(false);
+                setCountdown('');
+                fetchTodayVideo();
+            }
+        }
+    };
+
+    // ✅ Har second countdown update karo
+    useEffect(() => {
+        if (videoLocked && nextAvailableAt) {
+            const interval = setInterval(updateCountdown, 1000);
+            return () => clearInterval(interval);
+        }
+    }, [videoLocked, nextAvailableAt]);
+
+    // ✅ Video complete handler
+    const handleVideoComplete = (data) => {
+        if (data.completed && data.nextAvailableAt) {
+            setVideoLocked(true);
+            setNextAvailableAt(data.nextAvailableAt);
+            const remaining = calculateTimeRemaining(data.nextAvailableAt);
+            if (remaining) {
+                const h = String(remaining.hours).padStart(2, '0');
+                const m = String(remaining.minutes).padStart(2, '0');
+                const s = String(remaining.seconds).padStart(2, '0');
+                setCountdown(`${h}:${m}:${s}`);
+            }
+        }
     };
 
     useEffect(() => {
@@ -169,14 +258,13 @@ const InvestmentPlans = () => {
                 axios.get(`${BASE_URL}/transactions/plans/`, { headers: { Authorization: `Bearer ${token}` } }),
                 axios.get(`${BASE_URL}/transactions/dashboard/`, { headers: { Authorization: `Bearer ${token}` } })
             ]);
-            
+
             setAllPlans(plansRes.data);
             const active = dashboardRes.data.find(p => p.is_active === true);
-            
+
             if (active) {
                 setActivePlanData(active);
-                const todayRes = await axios.get(`${BASE_URL}/transactions/today-video/`, { headers: { Authorization: `Bearer ${token}` } });
-                setTodayVideo(todayRes.data);
+                await fetchTodayVideo();
             } else {
                 setActivePlanData(null);
             }
@@ -187,12 +275,41 @@ const InvestmentPlans = () => {
         }
     };
 
+    // ✅ Today's video fetch karne ka alag function
+    const fetchTodayVideo = async () => {
+        const token = getAccessToken();
+        try {
+            const todayRes = await axios.get(`${BASE_URL}/transactions/today-video/`, { headers: { Authorization: `Bearer ${token}` } });
+            const videoData = todayRes.data;
+            setTodayVideo(videoData);
+
+            // ✅ Check if video is locked with timer
+            if (videoData.video_locked && videoData.next_video_available_at) {
+                setVideoLocked(true);
+                setNextAvailableAt(videoData.next_video_available_at);
+                const remaining = calculateTimeRemaining(videoData.next_video_available_at);
+                if (remaining) {
+                    const h = String(remaining.hours).padStart(2, '0');
+                    const m = String(remaining.minutes).padStart(2, '0');
+                    const s = String(remaining.seconds).padStart(2, '0');
+                    setCountdown(`${h}:${m}:${s}`);
+                }
+            } else {
+                setVideoLocked(false);
+                setCountdown('');
+                setNextAvailableAt(null);
+            }
+        } catch (err) {
+            console.error("Failed to fetch today's video", err);
+        }
+    };
+
     const handleConfirmInvestment = async () => {
         const { planId } = confirmModal;
         setConfirmModal({ show: false, planId: null, planName: '' });
         setIsSubmitting(true);
         const token = getAccessToken();
-        
+
         try {
             const res = await axios.post(`${BASE_URL}/transactions/invest/`, { plan_id: planId }, {
                 headers: { Authorization: `Bearer ${token}` }
@@ -221,17 +338,17 @@ const InvestmentPlans = () => {
     return (
         <div className="investment-wrapper">
             <Toast {...toast} onClose={() => setToast({ ...toast, show: false })} />
-            
-            <ConfirmModal 
-                isOpen={confirmModal.show} 
+
+            <ConfirmModal
+                isOpen={confirmModal.show}
                 planName={confirmModal.planName}
                 onCancel={() => setConfirmModal({ show: false, planId: null, planName: '' })}
                 onConfirm={handleConfirmInvestment}
             />
 
-            <div 
-                className={`active-task-section ${!activePlanData ? 'no-plan-active' : ''}`} 
-                ref={activeSectionRef} 
+            <div
+                className={`active-task-section ${!activePlanData ? 'no-plan-active' : ''}`}
+                ref={activeSectionRef}
                 onMouseMove={(e) => handleMouseMove(e, activeSectionRef)}
             >
                 <div className="reveal-grid-overlay"></div>
@@ -248,12 +365,21 @@ const InvestmentPlans = () => {
                                 <div className="task-card-container">
                                     <div className="card-content-wrapper">
                                         <h3>Today's Task</h3>
-                                        {todayVideo?.is_completed ? (
+                                        {videoLocked && countdown ? (
+                                            // ✅ Timer show karo
+                                            <div className="timer-display-box">
+                                                <FaLock className="timer-lock-icon" />
+                                                <div className="countdown-display">
+                                                    <span className="countdown-label">Next video in:</span>
+                                                    <span className="countdown-time">{countdown}</span>
+                                                </div>
+                                            </div>
+                                        ) : todayVideo?.video_locked ? (
                                             <p className="task-completed-text"><FaCheckCircle /> Reward Received</p>
                                         ) : (
                                             <>
                                                 <p>{todayVideo?.today_video ? `Day ${todayVideo.day_number} is Live` : "No task"}</p>
-                                                {todayVideo?.today_video && (
+                                                {todayVideo?.today_video && !videoLocked && (
                                                     <button className="watch-btn" onClick={() => setShowVideo(true)}>
                                                         <FaPlayCircle /> Watch Video
                                                     </button>
@@ -266,7 +392,7 @@ const InvestmentPlans = () => {
                                     <div className="card-content-wrapper">
                                         <h3>Earned So Far</h3>
                                         {/* Updated: PKR replace with symbol & convert */}
-                                        <h2 style={{color: '#4ade80'}}>{symbol} {convert(activePlanData.total_earned)}</h2>
+                                        <h2 style={{ color: '#4ade80' }}>{symbol} {convert(activePlanData.total_earned)}</h2>
                                     </div>
                                 </div>
                             </div>
@@ -284,10 +410,10 @@ const InvestmentPlans = () => {
             <h2 className="section-title">Investment Plans</h2>
             <div className="plans-grid">
                 {allPlans.map((plan) => (
-                    <PlanCard 
-                        key={plan.id} 
-                        plan={plan} 
-                        onInvest={(id, name) => setConfirmModal({ show: true, planId: id, planName: name })} 
+                    <PlanCard
+                        key={plan.id}
+                        plan={plan}
+                        onInvest={(id, name) => setConfirmModal({ show: true, planId: id, planName: name })}
                         isSubmitting={isSubmitting}
                         handleMouseMove={handleMouseMove}
                         isUserAlreadyActive={activePlanData !== null}
@@ -300,13 +426,14 @@ const InvestmentPlans = () => {
             </div>
 
             {showVideo && (
-                <VideoModal 
-                    url={todayVideo.today_video} 
-                    day={todayVideo.day_number} 
+                <VideoModal
+                    url={todayVideo.today_video}
+                    day={todayVideo.day_number}
                     investmentId={activePlanData.id}
-                    onClose={() => setShowVideo(false)} 
+                    onClose={() => setShowVideo(false)}
                     onRewardSuccess={fetchAllData}
                     showToast={showToast}
+                    onVideoComplete={handleVideoComplete}
                 />
             )}
         </div>

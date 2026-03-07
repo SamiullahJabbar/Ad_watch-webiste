@@ -1,0 +1,528 @@
+/* ProgressPage.css - Daily Video Earnings */
+
+.video-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.video-page-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: #1a0b24;
+    text-align: center;
+    margin-bottom: 0.5rem;
+}
+
+.video-page-subtitle {
+    font-size: 0.9rem;
+    color: #718096;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Loading State */
+.video-loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    gap: 1rem;
+}
+
+.video-loading-container .animate-spin {
+    font-size: 3rem;
+    color: #1a0b24;
+}
+
+/* Message Box */
+.message-box {
+    padding: 1rem;
+    border-radius: 12px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+    animation: slideDown 0.3s ease-out;
+}
+
+.message-box.success {
+    background: #d1fae5;
+    color: #065f46;
+    border: 2px solid #10b981;
+}
+
+.message-box.error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 2px solid #ef4444;
+}
+
+.timer-card {
+    position: relative;
+    background-color: #1a0b24;
+    /* Base dark purple to match Dashboard */
+    border-radius: 24px;
+    padding: 2rem;
+    text-align: center;
+    color: white;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.5s ease-out;
+    overflow: hidden;
+}
+
+.timer-icon-wrapper {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(10px);
+}
+
+.timer-lock-icon {
+    font-size: 2.5rem;
+}
+
+.timer-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.countdown-timer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.time-segment {
+    background: transparent;
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    min-width: 70px;
+}
+
+.time-value {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.time-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0.25rem;
+    opacity: 0.9;
+}
+
+.time-separator {
+    font-size: 2rem;
+    font-weight: 300;
+    opacity: 0.7;
+}
+
+.timer-message {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    opacity: 0.95;
+    margin-bottom: 2rem;
+}
+
+/* Animated Border Box around the timer (Like Dashboard) */
+.countdown-container-animated {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    margin: 0 auto 1.5rem;
+    max-width: fit-content;
+    padding: 20px 30px;
+}
+
+.countdown-container-animated::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent, #5f3c7c, transparent 50%);
+    animation: rotateBorder 4s linear infinite;
+    z-index: -2;
+}
+
+.countdown-container-animated::after {
+    content: "";
+    position: absolute;
+    inset: 1.5px;
+    /* Line thickness */
+    background: #25053f;
+    /* Dark Purple Base */
+    border-radius: 15px;
+    z-index: -1;
+    transition: background 0.4s ease;
+}
+
+.timer-card:hover .countdown-container-animated::after {
+    background: #1a0b24;
+}
+
+@keyframes rotateBorder {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.reward-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+}
+
+.reward-icon {
+    font-size: 1.2rem;
+}
+
+/* Video Card */
+.video-card {
+    background-color: #1a0b24;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.video-header {
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.video-day-label {
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.video-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.video-wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    background: #000;
+}
+
+.video-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-actions {
+    padding: 1.5rem;
+}
+
+.reward-display {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.2rem;
+    border-radius: 16px;
+    margin-bottom: 1.5rem;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.reward-icon-large {
+    font-size: 2.5rem;
+}
+
+.reward-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+}
+
+.reward-amount {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+
+.complete-btn {
+    width: 100%;
+    background: #fff;
+    color: #1a0b24;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.complete-btn:hover:not(:disabled) {
+    background: #e2e8f0;
+    transform: scale(1.02);
+}
+
+.complete-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+/* No Video Card */
+.no-video-card {
+    background: white;
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.no-video-icon {
+    font-size: 4rem;
+    color: #cbd5e0;
+    margin-bottom: 1rem;
+}
+
+.no-video-card h3 {
+    color: #2d3748;
+    margin-bottom: 0.5rem;
+}
+
+.no-video-card p {
+    color: #718096;
+}
+
+/* Info Section */
+.video-info-section {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.video-info-section h4 {
+    color: #1a0b24;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+}
+
+.video-info-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.video-info-section li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.video-info-section li:last-child {
+    border-bottom: none;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- VIDEO MODAL --- */
+.video-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-container-modal {
+    width: 90%;
+    max-width: 600px;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+}
+
+.modal-video-header {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    font-weight: 800;
+}
+
+.close-icon {
+    cursor: pointer;
+    color: #ef4444;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.close-icon:hover {
+    color: #dc2626;
+    transform: scale(1.1);
+}
+
+.modal-video-frame {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+}
+
+.modal-video-frame iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.video-hint {
+    color: #fbbf24;
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 12px 20px;
+    background: rgba(251, 191, 36, 0.1);
+    margin: 0;
+}
+
+.modal-complete-btn {
+    width: 100%;
+    padding: 20px;
+    background: #1a0b24;
+    color: #fff;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.modal-complete-btn:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.modal-complete-btn:disabled {
+    background: #4b5563;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+.modal-complete-btn.locked {
+    background: #4b5563 !important;
+    color: #9ca3af !important;
+    cursor: not-allowed;
+    border: 1px solid #444;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .video-page-title {
+        font-size: 1.5rem;
+    }
+
+    .timer-card {
+        padding: 1.5rem;
+    }
+
+    .time-segment {
+        min-width: 60px;
+        padding: 0.75rem 1rem;
+    }
+
+    .time-value {
+        font-size: 1.5rem;
+    }
+
+    .time-label {
+        font-size: 0.6rem;
+    }
+
+    .video-header {
+        flex-direction: column;
+        gap: 0.75rem;
+        text-align: center;
+    }
+
+    .reward-display {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .reward-icon-large {
+        font-size: 2rem;
+    }
+}
